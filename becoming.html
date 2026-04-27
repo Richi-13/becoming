@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0e0e0e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Becoming">
+<title>Becoming</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0e0e0e;--bg2:#161616;--bg3:#1e1e1e;
+    --border:#2a2a2a;--border2:#333;
+    --text:#f0f0f0;--text2:#888;--text3:#444;
+    --blue:#4a9eff;--blue-dim:#0f2a45;
+    --green:#4ade80;--green-dim:#0f2a1a;
+    --orange:#fb923c;--orange-dim:#2a1508;
+    --radius:10px;--radius-sm:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overscroll-behavior:none;}
+  body{max-width:480px;margin:0 auto;padding-bottom:40px;}
+
+  .header{padding:20px 20px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);}
+  .logo{font-family:'DM Mono',monospace;font-size:22px;font-weight:300;letter-spacing:0.08em;}
+  .logo span{color:var(--blue);}
+  .week-nav{display:flex;align-items:center;gap:8px;}
+  .wnav-btn{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:16px;}
+  .wnav-btn:active{background:var(--blue-dim);border-color:var(--blue);color:var(--blue);}
+  .week-label{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);min-width:60px;text-align:center;}
+
+  .progress-section{padding:12px 20px;border-bottom:1px solid var(--border);}
+  .progress-meta{display:flex;justify-content:space-between;margin-bottom:7px;}
+  .progress-meta span{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);}
+  .progress-track{height:2px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--blue);border-radius:2px;transition:width 0.4s ease;}
+
+  .day-tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;}
+  .day-tabs::-webkit-scrollbar{display:none;}
+  .dtab{flex:1;min-width:42px;padding:10px 4px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;}
+  .dtab.active{color:var(--blue);border-bottom-color:var(--blue);}
+  .dtab.done-day{color:var(--green);}
+  .dtab.active.done-day{border-bottom-color:var(--green);}
+
+  .content{padding:16px 20px 0;}
+
+  .ex-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden;}
+  .ex-head{display:flex;align-items:center;gap:10px;padding:12px 14px 10px;}
+  .ex-index{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);min-width:18px;}
+  .ex-name{font-size:13px;font-weight:500;flex:1;line-height:1.3;}
+  .ex-badge{font-family:'DM Mono',monospace;font-size:10px;padding:3px 7px;border-radius:4px;white-space:nowrap;}
+  .ex-badge.blue{background:var(--blue-dim);color:var(--blue);}
+  .ex-badge.green{background:var(--green-dim);color:var(--green);}
+  .ex-body{padding:0 14px 12px 42px;}
+  .ex-tip{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:6px;}
+  .ex-weight{font-family:'DM Mono',monospace;font-size:11px;margin-bottom:10px;}
+  .ex-weight.blue{color:var(--blue);}
+  .ex-weight.green{color:var(--green);}
+
+  .sets-row{display:flex;gap:6px;margin-bottom:10px;}
+  .sbox{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);cursor:pointer;user-select:none;transition:all 0.15s;}
+  .sbox:active{transform:scale(0.9);}
+  .sbox.done.blue{background:var(--blue-dim);border-color:var(--blue);color:var(--blue);}
+  .sbox.done.green{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+
+  .timer-row{display:flex;align-items:center;gap:8px;}
+  .timer-lbl{font-size:11px;color:var(--text3);}
+  .timer-btn{font-family:'DM Mono',monospace;font-size:11px;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--text2);cursor:pointer;}
+  .timer-btn:active{background:var(--blue-dim);border-color:var(--blue);color:var(--blue);}
+  .timer-disp{font-family:'DM Mono',monospace;font-size:13px;color:var(--text);min-width:40px;}
+  .timer-disp.ready{color:var(--green);}
+
+  .rest-view{padding:28px 0 16px;text-align:center;}
+  .rest-title{font-family:'DM Mono',monospace;font-size:15px;font-weight:300;letter-spacing:0.05em;margin-bottom:8px;}
+  .rest-sub{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:20px;}
+  .rest-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .rest-tile{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;text-align:left;}
+  .rt-label{font-size:11px;color:var(--text3);margin-bottom:4px;}
+  .rt-val{font-family:'DM Mono',monospace;font-size:15px;}
+
+  .cardio-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
+  .cardio-title{font-size:14px;font-weight:500;margin-bottom:6px;}
+  .cardio-sub{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px;}
+  .cardio-opts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+  .copt{font-family:'DM Mono',monospace;font-size:11px;padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all 0.15s;}
+  .copt.sel{background:var(--orange-dim);border-color:var(--orange);color:var(--orange);}
+
+  .summary{margin:16px 20px 0;padding:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);}
+  .summary-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;}
+  .sum-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+  .sum-day{text-align:center;}
+  .sum-lbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);margin-bottom:4px;}
+  .sum-dot{width:22px;height:22px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:9px;border:1px solid var(--border);color:transparent;transition:all 0.2s;}
+  .sum-dot.upper{border-color:#1a3a5c;}
+  .sum-dot.lower{border-color:#1a3a25;}
+  .sum-dot.cardio{border-color:#3a2010;}
+  .sum-dot.complete.upper{background:var(--blue-dim);border-color:var(--blue);color:var(--blue);}
+  .sum-dot.complete.lower{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+  .sum-dot.complete.cardio{background:var(--orange-dim);border-color:var(--orange);color:var(--orange);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">be<span>coming</span></div>
+  <div class="week-nav">
+    <button class="wnav-btn" onclick="changeWeek(-1)">‹</button>
+    <div class="week-label" id="wlabel">неделя 1</div>
+    <button class="wnav-btn" onclick="changeWeek(1)">›</button>
+  </div>
+</div>
+
+<div class="progress-section">
+  <div class="progress-meta">
+    <span>прогресс</span>
+    <span id="prog-text">1 / 10 недель</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="pfill" style="width:10%"></div></div>
+</div>
+
+<div class="day-tabs" id="daytabs"></div>
+<div class="content" id="mainview"></div>
+<div class="summary">
+  <div class="summary-title">эта неделя</div>
+  <div class="sum-grid" id="sumgrid"></div>
+</div>
+
+<script>
+// Порядок дней начиная с воскресенья (совпадает с JS getDay())
+// 0=вс 1=пн 2=вт 3=ср 4=чт 5=пт 6=сб
+const DAYS    = ['вс','пн','вт','ср','чт','пт','сб'];
+const PATTERN = ['upper','lower','cardio','upper','lower','cardio','rest'];
+
+const UPPER = [
+  {n:'Отжимания на гантелях в дефиците',sets:3,reps:'до отказа',weight:'гантели как упоры',tip:'Опускаешься ниже кулаков — чувствуешь растяжение груди внизу. Локти под углом, не перпендикулярно.',c:'blue'},
+  {n:'Тяга гантели одной рукой',sets:3,reps:'10–12 каждую',weight:'10 кг',tip:'Локоть к бедру, не в сторону. Колено и руку упираешь в диван. Работаешь спиной.',c:'blue'},
+  {n:'Махи в стороны',sets:3,reps:'12–15',weight:'5 кг',tip:'Плечи вниз, тянешь локти в стороны как выливаешь воду. Не вверх.',c:'blue'},
+  {n:'Обратные махи в наклоне',sets:3,reps:'12–15',weight:'5 кг',tip:'Наклон 45°, руки слегка согнуты. Разводишь назад-в стороны медленно, с контролем.',c:'blue'},
+];
+const LOWER = [
+  {n:'Болгарские сплит-приседы',sets:3,reps:'10–12 каждую',weight:'без доп. веса → 5 кг',tip:'Одна нога на диване. Опускайся глубоко, спина ровно. Сначала техника, потом вес.',c:'green'},
+  {n:'Румынская тяга',sets:3,reps:'12',weight:'5–10 кг',tip:'Спина прямая, гантели тянешь вдоль ног вниз. Чувствуешь бицепс бедра.',c:'green'},
+  {n:'Молотки (hammer curls)',sets:3,reps:'12–15',weight:'5 кг',tip:'Ладони смотрят друг на друга. Без раскачки корпусом.',c:'green'},
+  {n:'Планка',sets:2,reps:'макс + 10с',weight:'',tip:'Ягодицы сжаты, пресс втянут, всё тело напряжено.',c:'green'},
+  {n:'Скручивания',sets:3,reps:'до жжения',weight:'',tip:'Только лопатки отрываются, поясница прижата. Сжимаешь пресс 1 сек в верхней точке.',c:'green'},
+];
+
+const SK = 'becoming_v2';
+let week=1, day=0;
+const timers={};
+let state={};
+
+try {
+  const s = localStorage.getItem(SK);
+  if(s){ const p=JSON.parse(s); state=p.sets||{}; week=p.week||1; }
+} catch(e){}
+
+function save(){ try{ localStorage.setItem(SK,JSON.stringify({sets:state,week})); }catch(e){} }
+function sk(w,d,e,s){ return `${w}_${d}_${e}_${s}`; }
+
+function changeWeek(dir){
+  week=Math.max(1,Math.min(10,week+dir));
+  document.getElementById('wlabel').textContent='неделя '+week;
+  document.getElementById('prog-text').textContent=week+' / 10 недель';
+  document.getElementById('pfill').style.width=(week*10)+'%';
+  save(); render();
+}
+
+function isDayDone(w,d){
+  const t=PATTERN[d];
+  const exs=t==='upper'?UPPER:t==='lower'?LOWER:null;
+  if(!exs) return false;
+  const total=exs.reduce((a,e)=>a+e.sets,0);
+  let done=0;
+  exs.forEach((ex,ei)=>{for(let s=0;s<ex.sets;s++){if(state[sk(w,d,ei,s)])done++;}});
+  return done===total;
+}
+
+function render(){ renderTabs(); renderDay(); renderSum(); }
+
+function renderTabs(){
+  const el=document.getElementById('daytabs');
+  el.innerHTML='';
+  DAYS.forEach((d,i)=>{
+    const done=isDayDone(week,i);
+    const div=document.createElement('div');
+    div.className='dtab'+(i===day?' active':'')+(done?' done-day':'');
+    div.textContent=d;
+    div.onclick=()=>{day=i;render();};
+    el.appendChild(div);
+  });
+}
+
+function renderDay(){
+  const view=document.getElementById('mainview');
+  const type=PATTERN[day];
+  if(type==='rest'){
+    view.innerHTML=`<div class="rest-view">
+      <div class="rest-title">день строительства</div>
+      <div class="rest-sub">Мышцы растут не во время тренировки,<br>а прямо сейчас — пока ты отдыхаешь.</div>
+      <div class="rest-grid">
+        <div class="rest-tile"><div class="rt-label">белок</div><div class="rt-val">150+ г</div></div>
+        <div class="rest-tile"><div class="rt-label">сон</div><div class="rt-val">7–9 ч</div></div>
+        <div class="rest-tile"><div class="rt-label">вода</div><div class="rt-val">2–3 л</div></div>
+        <div class="rest-tile"><div class="rt-label">калории</div><div class="rt-val">1800–2000</div></div>
+      </div></div>`;
+    return;
+  }
+  if(type==='cardio'){
+    view.innerHTML=`<div class="cardio-card">
+      <div class="cardio-title">Кардио — 25–30 минут</div>
+      <div class="cardio-sub">Пульс такой, чтобы говорить предложениями было тяжело — жиросжигающая зона.</div>
+      <div class="cardio-opts">
+        <div class="copt" onclick="selCardio(this)">берпи</div>
+        <div class="copt" onclick="selCardio(this)">прыжки</div>
+        <div class="copt" onclick="selCardio(this)">ходьба</div>
+        <div class="copt" onclick="selCardio(this)">бег</div>
+      </div>
+      <div class="timer-row">
+        <span class="timer-lbl">таймер:</span>
+        <button class="timer-btn" id="tbtn_cardio" onclick="startTimer('cardio',1800)">▶ 30 мин</button>
+        <span class="timer-disp" id="tdisp_cardio"></span>
+      </div></div>`;
+    return;
+  }
+  const exs=type==='upper'?UPPER:LOWER;
+  view.innerHTML='';
+  exs.forEach((ex,ei)=>{
+    const card=document.createElement('div');
+    card.className='ex-card';
+    let sboxes='';
+    for(let s=0;s<ex.sets;s++){
+      const done=!!state[sk(week,day,ei,s)];
+      sboxes+=`<div class="sbox${done?' done '+ex.c:''}" onclick="toggleSet(${ei},${s},this,'${ex.c}')">${s+1}</div>`;
+    }
+    const tid=`t${day}_${ei}`;
+    card.innerHTML=`
+      <div class="ex-head">
+        <div class="ex-index">0${ei+1}</div>
+        <div class="ex-name">${ex.n}</div>
+        <div class="ex-badge ${ex.c}">${ex.sets}×${ex.reps}</div>
+      </div>
+      <div class="ex-body">
+        <div class="ex-tip">${ex.tip}</div>
+        ${ex.weight?`<div class="ex-weight ${ex.c}">${ex.weight}</div>`:''}
+        <div class="sets-row">${sboxes}</div>
+        <div class="timer-row">
+          <span class="timer-lbl">отдых 2 мин:</span>
+          <button class="timer-btn" id="tbtn_${tid}" onclick="startTimer('${tid}')">▶ старт</button>
+          <span class="timer-disp" id="tdisp_${tid}"></span>
+        </div>
+      </div>`;
+    view.appendChild(card);
+  });
+}
+
+function toggleSet(ei,si,el,color){
+  const key=sk(week,day,ei,si);
+  state[key]=!state[key];
+  if(state[key]){el.classList.add('done',color);}
+  else{el.classList.remove('done',color);}
+  save(); renderTabs(); renderSum();
+}
+
+function selCardio(el){
+  document.querySelectorAll('.copt').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function startTimer(id,secs){
+  const btn=document.getElementById('tbtn_'+id);
+  const disp=document.getElementById('tdisp_'+id);
+  if(!secs)secs=120;
+  if(timers[id]){clearInterval(timers[id]);delete timers[id];btn.textContent='▶ старт';disp.textContent='';disp.className='timer-disp';return;}
+  let t=secs;
+  btn.textContent='■ стоп';
+  timers[id]=setInterval(()=>{
+    t--;
+    const m=Math.floor(t/60),s=t%60;
+    disp.textContent=m+':'+(s<10?'0':'')+s;
+    if(t<=0){
+      clearInterval(timers[id]);delete timers[id];
+      btn.textContent='▶ старт';
+      disp.textContent='готов!';disp.className='timer-disp ready';
+      setTimeout(()=>{disp.textContent='';disp.className='timer-disp';},3000);
+    }
+  },1000);
+}
+
+function renderSum(){
+  const grid=document.getElementById('sumgrid');
+  grid.innerHTML='';
+  DAYS.forEach((d,i)=>{
+    const type=PATTERN[i];
+    const done=isDayDone(week,i);
+    const dotType=type==='rest'?'':type==='cardio'?'cardio':type;
+    grid.innerHTML+=`<div class="sum-day"><div class="sum-lbl">${d}</div><div class="sum-dot ${dotType}${done?' complete':''}">${done?'✓':''}</div></div>`;
+  });
+}
+
+// JS getDay(): 0=вс, 1=пн ... 6=сб — идеально совпадает с нашим массивом
+day=new Date().getDay();
+document.getElementById('wlabel').textContent='неделя '+week;
+document.getElementById('prog-text').textContent=week+' / 10 недель';
+document.getElementById('pfill').style.width=(week*10)+'%';
+render();
+</script>
+</body>
+</html>
