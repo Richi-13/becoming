@@ -11,10 +11,9 @@
 <title>Becoming</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
+  :root{
     --bg:#0e0e0e;--bg2:#161616;--bg3:#1e1e1e;
-    --border:#2a2a2a;--border2:#333;
-    --text:#f0f0f0;--text2:#888;--text3:#444;
+    --border:#2a2a2a;--text:#f0f0f0;--text2:#888;--text3:#444;
     --blue:#4a9eff;--blue-dim:#0f2a45;
     --green:#4ade80;--green-dim:#0f2a1a;
     --orange:#fb923c;--orange-dim:#2a1508;
@@ -22,7 +21,7 @@
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
   html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overscroll-behavior:none;}
-  body{max-width:480px;margin:0 auto;padding-bottom:40px;}
+  body{max-width:480px;margin:0 auto;padding-bottom:80px;}
 
   .header{padding:20px 20px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);}
   .logo{font-family:'DM Mono',monospace;font-size:22px;font-weight:300;letter-spacing:0.08em;}
@@ -37,6 +36,10 @@
   .progress-meta span{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);}
   .progress-track{height:2px;background:var(--bg3);border-radius:2px;overflow:hidden;}
   .progress-fill{height:100%;background:var(--blue);border-radius:2px;transition:width 0.4s ease;}
+
+  .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--bg);border-top:1px solid var(--border);display:flex;z-index:100;}
+  .bnav-item{flex:1;padding:12px 4px 14px;text-align:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);cursor:pointer;letter-spacing:0.04em;}
+  .bnav-item.active{color:var(--blue);}
 
   .day-tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;}
   .day-tabs::-webkit-scrollbar{display:none;}
@@ -59,13 +62,11 @@
   .ex-weight{font-family:'DM Mono',monospace;font-size:11px;margin-bottom:10px;}
   .ex-weight.blue{color:var(--blue);}
   .ex-weight.green{color:var(--green);}
-
   .sets-row{display:flex;gap:6px;margin-bottom:10px;}
   .sbox{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);cursor:pointer;user-select:none;transition:all 0.15s;}
   .sbox:active{transform:scale(0.9);}
   .sbox.done.blue{background:var(--blue-dim);border-color:var(--blue);color:var(--blue);}
   .sbox.done.green{background:var(--green-dim);border-color:var(--green);color:var(--green);}
-
   .timer-row{display:flex;align-items:center;gap:8px;}
   .timer-lbl{font-size:11px;color:var(--text3);}
   .timer-btn{font-family:'DM Mono',monospace;font-size:11px;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--text2);cursor:pointer;}
@@ -80,12 +81,11 @@
   .rest-tile{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;text-align:left;}
   .rt-label{font-size:11px;color:var(--text3);margin-bottom:4px;}
   .rt-val{font-family:'DM Mono',monospace;font-size:15px;}
-
   .cardio-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
   .cardio-title{font-size:14px;font-weight:500;margin-bottom:6px;}
   .cardio-sub{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px;}
   .cardio-opts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
-  .copt{font-family:'DM Mono',monospace;font-size:11px;padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all 0.15s;}
+  .copt{font-family:'DM Mono',monospace;font-size:11px;padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg3);color:var(--text2);cursor:pointer;}
   .copt.sel{background:var(--orange-dim);border-color:var(--orange);color:var(--orange);}
 
   .summary{margin:16px 20px 0;padding:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);}
@@ -100,13 +100,63 @@
   .sum-dot.complete.upper{background:var(--blue-dim);border-color:var(--blue);color:var(--blue);}
   .sum-dot.complete.lower{background:var(--green-dim);border-color:var(--green);color:var(--green);}
   .sum-dot.complete.cardio{background:var(--orange-dim);border-color:var(--orange);color:var(--orange);}
+
+  /* DIARY */
+  .diary-section{padding:16px 20px 0;}
+  .diary-day-tabs{display:flex;gap:6px;margin-bottom:14px;}
+  .dday-tab{font-family:'DM Mono',monospace;font-size:11px;padding:5px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg3);color:var(--text3);cursor:pointer;}
+  .dday-tab.active{background:var(--blue-dim);border-color:var(--blue);color:var(--blue);}
+  .diary-day-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;}
+  .diary-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
+  .diary-ex-name{font-size:13px;font-weight:500;margin-bottom:14px;}
+
+  /* CUSTOM SLIDER */
+  .slider-row{margin-bottom:14px;}
+  .slider-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+  .slider-label{font-size:12px;color:var(--text2);}
+  .slider-val-wrap{display:flex;align-items:baseline;gap:2px;}
+  .slider-val{font-family:'DM Mono',monospace;font-size:16px;color:var(--text);font-weight:500;}
+  .slider-unit{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);}
+  .slider-track{position:relative;height:6px;border-radius:3px;background:var(--bg3);cursor:pointer;}
+  .slider-fill{position:absolute;left:0;top:0;height:100%;border-radius:3px;transition:width 0.05s;}
+  .slider-fill.blue{background:var(--blue);}
+  .slider-fill.green{background:var(--green);}
+  .slider-fill.orange{background:var(--orange);}
+  .slider-thumb{position:absolute;top:50%;transform:translate(-50%,-50%);width:20px;height:20px;border-radius:50%;cursor:grab;box-shadow:0 2px 8px rgba(0,0,0,0.5);transition:transform 0.1s;}
+  .slider-thumb:active{cursor:grabbing;transform:translate(-50%,-50%) scale(1.2);}
+  .slider-thumb.blue{background:var(--blue);}
+  .slider-thumb.green{background:var(--green);}
+  .slider-thumb.orange{background:var(--orange);}
+
+  .save-btn{width:100%;margin-top:6px;padding:12px;background:var(--blue-dim);border:1px solid var(--blue);border-radius:var(--radius-sm);color:var(--blue);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer;letter-spacing:0.04em;}
+  .save-btn:active{opacity:0.7;}
+
+  .saved-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--green-dim);border:1px solid var(--green);color:var(--green);font-family:'DM Mono',monospace;font-size:12px;padding:8px 18px;border-radius:var(--radius-sm);opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;z-index:200;}
+
+  /* PROGRESS */
+  .prog-section{padding:16px 20px 0;}
+  .prog-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
+  .prog-ex-name{font-size:13px;font-weight:500;margin-bottom:3px;}
+  .prog-delta{font-family:'DM Mono',monospace;font-size:10px;margin-bottom:12px;}
+  .prog-delta.up{color:var(--green);}
+  .prog-delta.down{color:var(--orange);}
+  .prog-delta.same{color:var(--text3);}
+  .prog-rows{display:flex;flex-direction:column;gap:8px;}
+  .prog-row{display:flex;align-items:center;gap:8px;}
+  .prog-week-lbl{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);min-width:36px;}
+  .prog-bar-wrap{flex:1;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+  .prog-bar{height:100%;border-radius:2px;transition:width 0.4s;}
+  .prog-bar.blue{background:var(--blue);}
+  .prog-bar.green{background:var(--green);}
+  .prog-val{font-family:'DM Mono',monospace;font-size:10px;color:var(--text2);min-width:56px;text-align:right;}
+  .prog-empty{font-size:13px;color:var(--text3);text-align:center;padding:40px 0;line-height:1.8;}
 </style>
 </head>
 <body>
 
 <div class="header">
   <div class="logo">be<span>coming</span></div>
-  <div class="week-nav">
+  <div class="week-nav" id="week-nav-wrap">
     <button class="wnav-btn" onclick="changeWeek(-1)">‹</button>
     <div class="week-label" id="wlabel">неделя 1</div>
     <button class="wnav-btn" onclick="changeWeek(1)">›</button>
@@ -114,72 +164,103 @@
 </div>
 
 <div class="progress-section">
-  <div class="progress-meta">
-    <span>прогресс</span>
-    <span id="prog-text">1 / 10 недель</span>
-  </div>
+  <div class="progress-meta"><span>прогресс</span><span id="prog-text">1 / 10 недель</span></div>
   <div class="progress-track"><div class="progress-fill" id="pfill" style="width:10%"></div></div>
 </div>
 
-<div class="day-tabs" id="daytabs"></div>
-<div class="content" id="mainview"></div>
-<div class="summary">
-  <div class="summary-title">эта неделя</div>
-  <div class="sum-grid" id="sumgrid"></div>
+<div id="view-workout">
+  <div class="day-tabs" id="daytabs"></div>
+  <div class="content" id="mainview"></div>
+  <div class="summary">
+    <div class="summary-title">эта неделя</div>
+    <div class="sum-grid" id="sumgrid"></div>
+  </div>
 </div>
 
+<div id="view-diary" style="display:none;">
+  <div class="diary-section">
+    <div class="diary-day-tabs" id="diary-day-tabs"></div>
+    <div class="diary-day-label" id="diary-label"></div>
+    <div id="diary-content"></div>
+  </div>
+</div>
+
+<div id="view-progress" style="display:none;">
+  <div class="prog-section" id="prog-content"></div>
+</div>
+
+<div class="bottom-nav">
+  <div class="bnav-item active" id="bnav-workout" onclick="switchView('workout')">тренировка</div>
+  <div class="bnav-item" id="bnav-diary" onclick="switchView('diary')">дневник</div>
+  <div class="bnav-item" id="bnav-progress" onclick="switchView('progress')">прогресс</div>
+</div>
+
+<div class="saved-toast" id="toast">сохранено ✓</div>
+
 <script>
-// Порядок дней начиная с воскресенья (совпадает с JS getDay())
-// 0=вс 1=пн 2=вт 3=ср 4=чт 5=пт 6=сб
 const DAYS    = ['вс','пн','вт','ср','чт','пт','сб'];
 const PATTERN = ['upper','lower','cardio','upper','lower','cardio','rest'];
+const TRAIN_DAYS = [0,1,3,4]; // вс,пн,ср,чт
 
 const UPPER = [
-  {n:'Отжимания на гантелях в дефиците',sets:3,reps:'до отказа',weight:'гантели как упоры',tip:'Опускаешься ниже кулаков — чувствуешь растяжение груди внизу. Локти под углом, не перпендикулярно.',c:'blue'},
-  {n:'Тяга гантели одной рукой',sets:3,reps:'10–12 каждую',weight:'10 кг',tip:'Локоть к бедру, не в сторону. Колено и руку упираешь в диван. Работаешь спиной.',c:'blue'},
-  {n:'Махи в стороны',sets:3,reps:'12–15',weight:'5 кг',tip:'Плечи вниз, тянешь локти в стороны как выливаешь воду. Не вверх.',c:'blue'},
-  {n:'Обратные махи в наклоне',sets:3,reps:'12–15',weight:'5 кг',tip:'Наклон 45°, руки слегка согнуты. Разводишь назад-в стороны медленно, с контролем.',c:'blue'},
+  {n:'Отжимания на гантелях в дефиците',sets:3,reps:'до отказа',weight:'гантели как упоры',tip:'Опускаешься ниже кулаков — чувствуешь растяжение груди внизу. Локти под углом, не перпендикулярно.',c:'blue',dtype:'reps'},
+  {n:'Тяга гантели одной рукой',sets:3,reps:'10–12 каждую',weight:'10 кг',tip:'Локоть к бедру, не в сторону. Колено и руку упираешь в диван. Работаешь спиной.',c:'blue',dtype:'weight'},
+  {n:'Махи в стороны',sets:3,reps:'12–15',weight:'5 кг',tip:'Плечи вниз, тянешь локти в стороны как выливаешь воду. Не вверх.',c:'blue',dtype:'weight'},
+  {n:'Обратные махи в наклоне',sets:3,reps:'12–15',weight:'5 кг',tip:'Наклон 45°, руки слегка согнуты. Разводишь назад-в стороны медленно, с контролем.',c:'blue',dtype:'weight'},
 ];
 const LOWER = [
-  {n:'Болгарские сплит-приседы',sets:3,reps:'10–12 каждую',weight:'без доп. веса → 5 кг',tip:'Одна нога на диване. Опускайся глубоко, спина ровно. Сначала техника, потом вес.',c:'green'},
-  {n:'Румынская тяга',sets:3,reps:'12',weight:'5–10 кг',tip:'Спина прямая, гантели тянешь вдоль ног вниз. Чувствуешь бицепс бедра.',c:'green'},
-  {n:'Молотки (hammer curls)',sets:3,reps:'12–15',weight:'5 кг',tip:'Ладони смотрят друг на друга. Без раскачки корпусом.',c:'green'},
-  {n:'Планка',sets:2,reps:'макс + 10с',weight:'',tip:'Ягодицы сжаты, пресс втянут, всё тело напряжено.',c:'green'},
-  {n:'Скручивания',sets:3,reps:'до жжения',weight:'',tip:'Только лопатки отрываются, поясница прижата. Сжимаешь пресс 1 сек в верхней точке.',c:'green'},
+  {n:'Болгарские сплит-приседы',sets:3,reps:'10–12 каждую',weight:'без доп. веса → 5 кг',tip:'Одна нога на диване. Опускайся глубоко, спина ровно. Сначала техника, потом вес.',c:'green',dtype:'weight'},
+  {n:'Румынская тяга',sets:3,reps:'12',weight:'5–10 кг',tip:'Спина прямая, гантели тянешь вдоль ног вниз. Чувствуешь бицепс бедра.',c:'green',dtype:'weight'},
+  {n:'Молотки (hammer curls)',sets:3,reps:'12–15',weight:'5 кг',tip:'Ладони смотрят друг на друга. Без раскачки корпусом.',c:'green',dtype:'weight'},
+  {n:'Планка',sets:3,reps:'макс + 10с',weight:'',tip:'Ягодицы сжаты, пресс втянут, всё тело напряжено.',c:'green',dtype:'plank'},
+  {n:'Скручивания',sets:3,reps:'до жжения',weight:'',tip:'Только лопатки отрываются, поясница прижата. Сжимаешь пресс 1 сек в верхней точке.',c:'green',dtype:'reps'},
 ];
 
-const SK = 'becoming_v2';
-let week=1, day=0;
+const SK='becoming_v4';
+let week=1,day=0,currentView='workout',diaryDay=0;
 const timers={};
-let state={};
+// temp diary values before save
+const tempDiary={};
+let appState={sets:{},week:1,diary:{}};
 
-try {
-  const s = localStorage.getItem(SK);
-  if(s){ const p=JSON.parse(s); state=p.sets||{}; week=p.week||1; }
-} catch(e){}
+try{const s=localStorage.getItem(SK);if(s){appState=JSON.parse(s);week=appState.week||1;}}catch(e){}
 
-function save(){ try{ localStorage.setItem(SK,JSON.stringify({sets:state,week})); }catch(e){} }
-function sk(w,d,e,s){ return `${w}_${d}_${e}_${s}`; }
+function save(){try{appState.week=week;localStorage.setItem(SK,JSON.stringify(appState));}catch(e){}}
+function sk(w,d,e,s){return `${w}_${d}_${e}_${s}`;}
+function dk(w,d,ei){return `${w}_${d}_${ei}`;}
+
+// ── VIEWS ──
+function switchView(v){
+  currentView=v;
+  ['workout','diary','progress'].forEach(n=>{
+    document.getElementById('view-'+n).style.display=n===v?'block':'none';
+    document.getElementById('bnav-'+n).classList.toggle('active',n===v);
+  });
+  document.getElementById('week-nav-wrap').style.display=v==='progress'?'none':'flex';
+  if(v==='diary')renderDiary();
+  if(v==='progress')renderProgress();
+}
 
 function changeWeek(dir){
   week=Math.max(1,Math.min(10,week+dir));
   document.getElementById('wlabel').textContent='неделя '+week;
   document.getElementById('prog-text').textContent=week+' / 10 недель';
   document.getElementById('pfill').style.width=(week*10)+'%';
-  save(); render();
+  save();render();
+  if(currentView==='diary')renderDiary();
 }
 
+// ── WORKOUT ──
 function isDayDone(w,d){
-  const t=PATTERN[d];
-  const exs=t==='upper'?UPPER:t==='lower'?LOWER:null;
-  if(!exs) return false;
+  const t=PATTERN[d],exs=t==='upper'?UPPER:t==='lower'?LOWER:null;
+  if(!exs)return false;
   const total=exs.reduce((a,e)=>a+e.sets,0);
   let done=0;
-  exs.forEach((ex,ei)=>{for(let s=0;s<ex.sets;s++){if(state[sk(w,d,ei,s)])done++;}});
+  exs.forEach((ex,ei)=>{for(let s=0;s<ex.sets;s++){if(appState.sets[sk(w,d,ei,s)])done++;}});
   return done===total;
 }
 
-function render(){ renderTabs(); renderDay(); renderSum(); }
+function render(){renderTabs();renderDay();renderSum();}
 
 function renderTabs(){
   const el=document.getElementById('daytabs');
@@ -233,7 +314,7 @@ function renderDay(){
     card.className='ex-card';
     let sboxes='';
     for(let s=0;s<ex.sets;s++){
-      const done=!!state[sk(week,day,ei,s)];
+      const done=!!appState.sets[sk(week,day,ei,s)];
       sboxes+=`<div class="sbox${done?' done '+ex.c:''}" onclick="toggleSet(${ei},${s},this,'${ex.c}')">${s+1}</div>`;
     }
     const tid=`t${day}_${ei}`;
@@ -259,34 +340,24 @@ function renderDay(){
 
 function toggleSet(ei,si,el,color){
   const key=sk(week,day,ei,si);
-  state[key]=!state[key];
-  if(state[key]){el.classList.add('done',color);}
-  else{el.classList.remove('done',color);}
-  save(); renderTabs(); renderSum();
+  appState.sets[key]=!appState.sets[key];
+  if(appState.sets[key]){el.classList.add('done',color);}else{el.classList.remove('done',color);}
+  save();renderTabs();renderSum();
 }
 
-function selCardio(el){
-  document.querySelectorAll('.copt').forEach(e=>e.classList.remove('sel'));
-  el.classList.add('sel');
-}
+function selCardio(el){document.querySelectorAll('.copt').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');}
 
 function startTimer(id,secs){
   const btn=document.getElementById('tbtn_'+id);
   const disp=document.getElementById('tdisp_'+id);
   if(!secs)secs=120;
   if(timers[id]){clearInterval(timers[id]);delete timers[id];btn.textContent='▶ старт';disp.textContent='';disp.className='timer-disp';return;}
-  let t=secs;
-  btn.textContent='■ стоп';
+  let t=secs;btn.textContent='■ стоп';
   timers[id]=setInterval(()=>{
     t--;
     const m=Math.floor(t/60),s=t%60;
     disp.textContent=m+':'+(s<10?'0':'')+s;
-    if(t<=0){
-      clearInterval(timers[id]);delete timers[id];
-      btn.textContent='▶ старт';
-      disp.textContent='готов!';disp.className='timer-disp ready';
-      setTimeout(()=>{disp.textContent='';disp.className='timer-disp';},3000);
-    }
+    if(t<=0){clearInterval(timers[id]);delete timers[id];btn.textContent='▶ старт';disp.textContent='готов!';disp.className='timer-disp ready';setTimeout(()=>{disp.textContent='';disp.className='timer-disp';},3000);}
   },1000);
 }
 
@@ -294,15 +365,204 @@ function renderSum(){
   const grid=document.getElementById('sumgrid');
   grid.innerHTML='';
   DAYS.forEach((d,i)=>{
-    const type=PATTERN[i];
-    const done=isDayDone(week,i);
+    const type=PATTERN[i],done=isDayDone(week,i);
     const dotType=type==='rest'?'':type==='cardio'?'cardio':type;
     grid.innerHTML+=`<div class="sum-day"><div class="sum-lbl">${d}</div><div class="sum-dot ${dotType}${done?' complete':''}">${done?'✓':''}</div></div>`;
   });
 }
 
-// JS getDay(): 0=вс, 1=пн ... 6=сб — идеально совпадает с нашим массивом
+// ── CUSTOM SLIDER ──
+function makeSlider(key,label,min,max,step,initVal,color,unit){
+  const pct=(initVal-min)/(max-min)*100;
+  const wrap=document.createElement('div');
+  wrap.className='slider-row';
+  wrap.innerHTML=`
+    <div class="slider-top">
+      <span class="slider-label">${label}</span>
+      <div class="slider-val-wrap"><span class="slider-val" id="sv_${key}">${initVal}</span><span class="slider-unit">${unit}</span></div>
+    </div>
+    <div class="slider-track" id="st_${key}">
+      <div class="slider-fill ${color}" id="sf_${key}" style="width:${pct}%"></div>
+      <div class="slider-thumb ${color}" id="sth_${key}" style="left:${pct}%"></div>
+    </div>`;
+
+  // attach after insert
+  setTimeout(()=>{
+    const track=document.getElementById('st_'+key);
+    if(!track)return;
+    let dragging=false;
+
+    function setVal(clientX){
+      const rect=track.getBoundingClientRect();
+      let pct=Math.max(0,Math.min(1,(clientX-rect.left)/rect.width));
+      let val=min+Math.round((max-min)*pct/step)*step;
+      val=Math.max(min,Math.min(max,val));
+      const p=(val-min)/(max-min)*100;
+      document.getElementById('sf_'+key).style.width=p+'%';
+      document.getElementById('sth_'+key).style.left=p+'%';
+      document.getElementById('sv_'+key).textContent=val;
+      tempDiary[key]=val;
+    }
+
+    track.addEventListener('touchstart',e=>{dragging=true;setVal(e.touches[0].clientX);},{passive:true});
+    track.addEventListener('touchmove',e=>{if(dragging)setVal(e.touches[0].clientX);},{passive:true});
+    track.addEventListener('touchend',()=>dragging=false);
+    track.addEventListener('mousedown',e=>{dragging=true;setVal(e.clientX);});
+    document.addEventListener('mousemove',e=>{if(dragging)setVal(e.clientX);});
+    document.addEventListener('mouseup',()=>dragging=false);
+  },0);
+
+  tempDiary[key]=initVal;
+  return wrap;
+}
+
+// ── DIARY ──
+function renderDiary(){
+  const tabs=document.getElementById('diary-day-tabs');
+  tabs.innerHTML='';
+  TRAIN_DAYS.forEach(i=>{
+    const btn=document.createElement('div');
+    btn.className='dday-tab'+(i===diaryDay?' active':'');
+    btn.textContent=DAYS[i];
+    btn.onclick=()=>{diaryDay=i;renderDiary();};
+    tabs.appendChild(btn);
+  });
+
+  const type=PATTERN[diaryDay];
+  const exs=type==='upper'?UPPER:LOWER;
+  document.getElementById('diary-label').textContent=(type==='upper'?'верх':'низ')+' · неделя '+week;
+
+  const container=document.getElementById('diary-content');
+  container.innerHTML='';
+
+  exs.forEach((ex,ei)=>{
+    const saved=appState.diary[dk(week,diaryDay,ei)]||{};
+    const card=document.createElement('div');
+    card.className='diary-card';
+    const nameEl=document.createElement('div');
+    nameEl.className='diary-ex-name';
+    nameEl.textContent=ex.n;
+    card.appendChild(nameEl);
+
+    if(ex.dtype==='reps'){
+      for(let s=0;s<ex.sets;s++){
+        card.appendChild(makeSlider(`${ei}_r${s}`,`подход ${s+1} — повторения`,1,20,1,saved['r'+s]||8,ex.c,'раз'));
+        card.appendChild(makeSlider(`${ei}_w${s}`,`подход ${s+1} — вес`,0,20,1,saved['w'+s]||0,ex.c,'кг'));
+      }
+    } else if(ex.dtype==='weight'){
+      card.appendChild(makeSlider(`${ei}_w0`,'рабочий вес',0,20,1,saved['w0']||5,ex.c,'кг'));
+      for(let s=0;s<ex.sets;s++){
+        card.appendChild(makeSlider(`${ei}_r${s}`,`подход ${s+1} — повторения`,1,20,1,saved['r'+s]||10,ex.c,'раз'));
+      }
+    } else if(ex.dtype==='plank'){
+      for(let s=0;s<ex.sets;s++){
+        card.appendChild(makeSlider(`${ei}_p${s}`,`подход ${s+1}`,5,180,5,saved['p'+s]||30,ex.c,'сек'));
+      }
+    }
+    container.appendChild(card);
+  });
+
+  const saveBtn=document.createElement('button');
+  saveBtn.className='save-btn';
+  saveBtn.textContent='сохранить';
+  saveBtn.onclick=()=>{
+    if(!appState.diary)appState.diary={};
+    exs.forEach((ex,ei)=>{
+      if(!appState.diary[dk(week,diaryDay,ei)])appState.diary[dk(week,diaryDay,ei)]={};
+      const saved=appState.diary[dk(week,diaryDay,ei)];
+      if(ex.dtype==='reps'){
+        for(let s=0;s<ex.sets;s++){
+          if(tempDiary[`${ei}_r${s}`]!==undefined)saved['r'+s]=tempDiary[`${ei}_r${s}`];
+          if(tempDiary[`${ei}_w${s}`]!==undefined)saved['w'+s]=tempDiary[`${ei}_w${s}`];
+        }
+      } else if(ex.dtype==='weight'){
+        if(tempDiary[`${ei}_w0`]!==undefined)saved['w0']=tempDiary[`${ei}_w0`];
+        for(let s=0;s<ex.sets;s++){
+          if(tempDiary[`${ei}_r${s}`]!==undefined)saved['r'+s]=tempDiary[`${ei}_r${s}`];
+        }
+      } else if(ex.dtype==='plank'){
+        for(let s=0;s<ex.sets;s++){
+          if(tempDiary[`${ei}_p${s}`]!==undefined)saved['p'+s]=tempDiary[`${ei}_p${s}`];
+        }
+      }
+    });
+    save();
+    const toast=document.getElementById('toast');
+    toast.style.opacity='1';
+    setTimeout(()=>toast.style.opacity='0',1800);
+  };
+  container.appendChild(saveBtn);
+}
+
+// ── PROGRESS ──
+function renderProgress(){
+  const container=document.getElementById('prog-content');
+  container.innerHTML='';
+  let hasData=false;
+
+  const allGroups=[
+    {exs:UPPER,dayIdx:0},
+    {exs:LOWER,dayIdx:1},
+  ];
+
+  allGroups.forEach(({exs,dayIdx})=>{
+    exs.forEach((ex,ei)=>{
+      const weekData=[];
+      for(let w=1;w<=10;w++){
+        const saved=appState.diary[dk(w,dayIdx,ei)];
+        if(!saved)continue;
+        let volume=0;
+        if(ex.dtype==='reps'){
+          for(let s=0;s<ex.sets;s++){const r=saved['r'+s]||0,wt=saved['w'+s]||0;volume+=wt>0?r*wt:r;}
+        } else if(ex.dtype==='weight'){
+          const wt=saved['w0']||0;
+          for(let s=0;s<ex.sets;s++){volume+=(saved['r'+s]||0)*wt;}
+        } else if(ex.dtype==='plank'){
+          for(let s=0;s<ex.sets;s++){volume+=saved['p'+s]||0;}
+        }
+        if(volume>0)weekData.push({w,volume});
+      }
+      if(weekData.length===0)return;
+      hasData=true;
+
+      const maxVol=Math.max(...weekData.map(d=>d.volume));
+      const delta=weekData.length>1?weekData[weekData.length-1].volume-weekData[0].volume:0;
+      const unit=ex.dtype==='plank'?'сек':ex.dtype==='weight'?'кг·раз':'раз';
+
+      const card=document.createElement('div');
+      card.className='prog-card';
+      let rows='';
+      weekData.forEach((d,i)=>{
+        const pct=maxVol>0?Math.round(d.volume/maxVol*100):0;
+        const prev=i>0?weekData[i-1].volume:null;
+        const diff=prev!==null?d.volume-prev:null;
+        const diffStr=diff!==null&&diff!==0?(diff>0?`+${diff}`:`${diff}`):'';
+        const diffColor=diff>0?'var(--green)':'var(--orange)';
+        rows+=`<div class="prog-row">
+          <div class="prog-week-lbl">нед ${d.w}</div>
+          <div class="prog-bar-wrap"><div class="prog-bar ${ex.c}" style="width:${pct}%"></div></div>
+          <div class="prog-val">${d.volume}${diffStr?` <span style="color:${diffColor};font-size:9px">${diffStr}</span>`:''}</div>
+        </div>`;
+      });
+
+      const deltaClass=delta>0?'up':delta<0?'down':'same';
+      const deltaSign=delta>0?'↑ +':delta<0?'↓ ':'→ ';
+      card.innerHTML=`
+        <div class="prog-ex-name">${ex.n}</div>
+        <div class="prog-delta ${deltaClass}">${deltaSign}${Math.abs(delta)} ${unit}</div>
+        <div class="prog-rows">${rows}</div>`;
+      container.appendChild(card);
+    });
+  });
+
+  if(!hasData){
+    container.innerHTML='<div class="prog-empty">записей пока нет —<br>заполни дневник<br>после тренировки</div>';
+  }
+}
+
+// ── INIT ──
 day=new Date().getDay();
+diaryDay=TRAIN_DAYS.includes(day)?day:TRAIN_DAYS[0];
 document.getElementById('wlabel').textContent='неделя '+week;
 document.getElementById('prog-text').textContent=week+' / 10 недель';
 document.getElementById('pfill').style.width=(week*10)+'%';
