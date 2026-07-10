@@ -45,11 +45,11 @@
   
   .ex-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
   .ex-name{font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;}
-  .skip-btn{font-family:'DM Mono',monospace;font-size:12px;color:var(--text3);padding:4px 8px;cursor:pointer;border:1px solid transparent;border-radius:4px;}
+  .skip-btn{font-family:'DM Mono',monospace;font-size:16px;color:var(--text3);padding:4px 8px;cursor:pointer;border:1px solid transparent;border-radius:4px;display:flex;align-items:center;justify-content:center;min-width:32px;}
   .skip-btn:active{background:var(--bg3);border-color:var(--border);}
   
   .set-container{background:var(--bg);padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:8px;}
-  .set-title{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);text-transform:uppercase;margin-bottom:6px;}
+  .set-title{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);margin-bottom:6px;}
   
   .ctrl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
   .ctrl-row:last-child{margin-bottom:0;}
@@ -66,7 +66,7 @@
   .native-slider.green::-webkit-slider-thumb{background:var(--green);}
   .native-slider.orange::-webkit-slider-thumb{background:var(--orange);}
 
-  .save-btn{width:100%;margin-top:16px;padding:14px;background:var(--blue-dim);border:1px solid var(--blue);border-radius:var(--radius-sm);color:var(--blue);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer;letter-spacing:0.08em;text-transform:uppercase;}
+  .save-btn{width:100%;margin-top:16px;padding:14px;background:var(--blue-dim);border:1px solid var(--blue);border-radius:var(--radius-sm);color:var(--blue);font-family:'DM Mono',monospace;font-size:14px;cursor:pointer;letter-spacing:0.04em;}
   
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:16px;}
   .cal-day{aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;border:1px solid var(--border);color:var(--text3);}
@@ -98,7 +98,7 @@
     <button class="cal-btn" onclick="overrideQueue()">Сменить ↻</button>
   </div>
   <div id="workout-list"></div>
-  <button class="save-btn" onclick="finishWorkout()" id="finish-btn">ЗАВЕРШИТЬ</button>
+  <button class="save-btn" onclick="finishWorkout()" id="finish-btn">готово ✓</button>
 </div>
 
 <!-- VIEW: CALENDAR -->
@@ -116,7 +116,7 @@
 
 <!-- VIEW: PROGRESS -->
 <div id="view-progress" class="content" style="display:none;">
-  <div class="queue-title" style="margin-bottom:16px;">Прогрессия (Volume)</div>
+  <div class="queue-title" style="margin-bottom:16px; text-align:center; text-transform:none; font-size:15px; color:var(--text);">Прогрессия</div>
   <div id="progress-list"></div>
 </div>
 
@@ -127,7 +127,7 @@
 </div>
 
 <script>
-const SK = 'becoming_v8';
+const SK = 'becoming_v9';
 const QUEUE_ORDER = ['upper', 'lower', 'cardio', 'rest'];
 const ROMAN = ['I', 'II', 'III', 'IV', 'V'];
 const MONTHS = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
@@ -190,7 +190,7 @@ function toggleSkip(exName, btnEl) {
   
   if (isSkipped) {
     card.classList.add('skipped');
-    btnEl.innerHTML = 'ВОССТАНОВИТЬ ↺';
+    btnEl.innerHTML = '↺';
   } else {
     card.classList.remove('skipped');
     btnEl.innerHTML = '✕';
@@ -230,11 +230,11 @@ function renderWorkout() {
           </div>
         </div>
       </div>`;
-    btn.textContent = 'ЗАВЕРШИТЬ';
+    btn.innerHTML = 'готово ✓';
     return;
   }
 
-  btn.textContent = 'ЗАВЕРШИТЬ';
+  btn.innerHTML = 'готово ✓';
   
   EXERCISES[currentType].forEach((ex) => {
     if(!appState.records[ex.n]) appState.records[ex.n] = { skipped: false };
@@ -245,7 +245,7 @@ function renderWorkout() {
     card.innerHTML = `
       <div class="ex-head">
         <div class="ex-name" style="color:${colors[currentType]}">${ex.n}</div>
-        <div class="skip-btn" onclick="toggleSkip('${ex.n}', this)">${rec.skipped ? 'ВОССТАНОВИТЬ ↺' : '✕'}</div>
+        <div class="skip-btn" onclick="toggleSkip('${ex.n}', this)">${rec.skipped ? '↺' : '✕'}</div>
       </div>
     `;
     
@@ -311,14 +311,13 @@ function finishWorkout() {
   const snapshot = JSON.parse(JSON.stringify(appState.records));
   appState.history.push({ date: today, type: currentType, snapshot: snapshot });
   
-  // Сбрасываем флаг skipped для следующей тренировки
   Object.keys(appState.records).forEach(key => appState.records[key].skipped = false);
   
   appState.queueIdx = (appState.queueIdx + 1) % QUEUE_ORDER.length;
   save();
   
   const btn = document.getElementById('finish-btn');
-  btn.textContent = '✓ СОХРАНЕНО';
+  btn.innerHTML = 'сохранено';
   setTimeout(() => {
     switchView('calendar');
     renderWorkout();
@@ -348,7 +347,6 @@ function renderCalendar() {
   
   title.innerHTML = `Активность <span class="month-green">${MONTHS[month].toLowerCase()}</span><span class="year-mini">${year}</span>`;
   
-  // Показываем кнопку "вернуться на сегодня", если пролистали месяц
   if (year !== realToday.getFullYear() || month !== realToday.getMonth()) {
     btnToday.style.display = 'block';
   } else {
@@ -370,7 +368,7 @@ function renderCalendar() {
   }
 }
 
-// Прогрессия (Графики и Майлстоуны)
+// Прогрессия (Только силовые)
 function getIsoWeek(dateStr) {
   const d = new Date(dateStr);
   d.setHours(0, 0, 0, 0);
@@ -389,7 +387,9 @@ function renderProgress() {
   container.innerHTML = '';
   
   const uniqueExercises = new Set();
-  Object.values(EXERCISES).forEach(list => list.forEach(ex => uniqueExercises.add(ex.n)));
+  // Добавляем только силовые упражнения, исключая кардио
+  EXERCISES.upper.forEach(ex => uniqueExercises.add(ex.n));
+  EXERCISES.lower.forEach(ex => uniqueExercises.add(ex.n));
   
   let hasData = false;
   
@@ -397,7 +397,6 @@ function renderProgress() {
     const weeklyData = [];
     const seenWeeks = new Set();
     
-    // Фильтруем: только первое выполнение упражнения за календарную неделю, и только если не skipped
     appState.history.forEach(entry => {
       if(entry.snapshot && entry.snapshot[exName] && !entry.snapshot[exName].skipped) {
         const weekKey = getIsoWeek(entry.date);
@@ -428,10 +427,8 @@ function renderProgress() {
       const card = document.createElement('div');
       card.className = 'prog-card';
       
-      // Определяем цвет бара
       let barColor = 'var(--blue)';
       if (EXERCISES.lower.find(e => e.n === exName)) barColor = 'var(--green)';
-      if (EXERCISES.cardio.find(e => e.n === exName)) barColor = 'var(--orange)';
       
       let rows = '';
       weeklyData.forEach((d, i) => {
