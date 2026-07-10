@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0e0e0e">
 <title>Becoming</title>
-<link href="https://fonts.googleapis.com/css2=family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0e0e0e;--bg2:#161616;--bg3:#1e1e1e;
@@ -36,14 +36,18 @@
   .year-mini{font-size:10px;color:var(--text3);margin-left:6px;}
   
   .cal-nav{display:flex;gap:6px;}
-  .override-btn, .cal-btn{font-family:'DM Mono',monospace;font-size:11px;padding:6px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;}
-  .override-btn:active, .cal-btn:active{background:var(--border);}
+  .cal-btn{font-family:'DM Mono',monospace;font-size:11px;padding:6px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;transition:all 0.2s;}
+  .cal-btn:active{background:var(--border);}
   
-  .ex-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;padding:14px;}
-  .ex-name{font-size:14px;font-weight:500;margin-bottom:14px;font-family:'DM Sans',sans-serif;}
-  .ex-tip{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:12px;padding-left:4px;border-left:2px solid var(--border);}
+  .ex-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;padding:14px;transition:opacity 0.3s;}
+  .ex-card.skipped{opacity:0.4;pointer-events:none;}
+  .ex-card.skipped .skip-btn{pointer-events:auto;color:var(--text);}
   
-  /* MIXED CONTROLS */
+  .ex-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+  .ex-name{font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;}
+  .skip-btn{font-family:'DM Mono',monospace;font-size:12px;color:var(--text3);padding:4px 8px;cursor:pointer;border:1px solid transparent;border-radius:4px;}
+  .skip-btn:active{background:var(--bg3);border-color:var(--border);}
+  
   .set-container{background:var(--bg);padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:8px;}
   .set-title{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);text-transform:uppercase;margin-bottom:6px;}
   
@@ -51,22 +55,19 @@
   .ctrl-row:last-child{margin-bottom:0;}
   .ctrl-lbl{font-size:12px;color:var(--text2);}
   
-  /* STEPPER */
   .stepper-ctrl{display:flex;align-items:center;gap:10px;}
   .st-btn{width:28px;height:28px;border-radius:var(--radius-sm);background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
   .st-val{font-family:'DM Mono',monospace;font-size:14px;min-width:28px;text-align:center;}
   .st-unit{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);}
 
-  /* NATIVE SLIDER REFS */
   .slider-wrapper{display:flex;align-items:center;gap:10px;flex:1;justify-content:flex-end;}
-  .native-slider{width:120px;-webkit-appearance:none;appearance:none;background:var(--bg3);height:4px;border-radius:2px;outline:none;}
+  .native-slider{width:120px;-webkit-appearance:none;appearance:none;background:var(--bg3);height:4px;border-radius:2px;outline:none;touch-action:pan-y;}
   .native-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--blue);cursor:pointer;}
   .native-slider.green::-webkit-slider-thumb{background:var(--green);}
   .native-slider.orange::-webkit-slider-thumb{background:var(--orange);}
 
   .save-btn{width:100%;margin-top:16px;padding:14px;background:var(--blue-dim);border:1px solid var(--blue);border-radius:var(--radius-sm);color:var(--blue);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer;letter-spacing:0.08em;text-transform:uppercase;}
   
-  /* CALENDAR */
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:16px;}
   .cal-day{aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;border:1px solid var(--border);color:var(--text3);}
   .cal-day.done-upper{background:var(--blue-dim);border-color:var(--blue);color:var(--blue);}
@@ -74,12 +75,14 @@
   .cal-day.done-cardio{background:var(--orange-dim);border-color:var(--orange);color:var(--orange);}
   .cal-day.done-rest{background:var(--grey-dim);border-color:var(--grey);color:var(--grey);}
 
-  /* PROGRESS TRACKING */
-  .prog-item{margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
-  .prog-item:last-child{border:none;}
-  .prog-meta{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:11px;margin-bottom:4px;}
-  .prog-date{color:var(--text3);}
-  .prog-val{color:var(--text2);}
+  /* PROGRESS BAR STYLES */
+  .prog-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px;}
+  .prog-rows{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+  .prog-row{display:flex;align-items:center;gap:8px;}
+  .prog-date-lbl{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);min-width:32px;}
+  .prog-bar-wrap{flex:1;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+  .prog-bar{height:100%;border-radius:2px;transition:width 0.4s;background:var(--blue);}
+  .prog-val{font-family:'DM Mono',monospace;font-size:10px;color:var(--text2);min-width:40px;text-align:right;}
 </style>
 </head>
 <body>
@@ -92,10 +95,10 @@
 <div id="view-workout" class="content">
   <div class="queue-header">
     <div class="queue-title" id="q-title">Очередь: ВЕРХ</div>
-    <button class="override-btn" onclick="overrideQueue()">Сменить ↻</button>
+    <button class="cal-btn" onclick="overrideQueue()">Сменить ↻</button>
   </div>
   <div id="workout-list"></div>
-  <button class="save-btn" onclick="finishWorkout()" id="finish-btn">Завершить тренировку</button>
+  <button class="save-btn" onclick="finishWorkout()" id="finish-btn">ЗАВЕРШИТЬ</button>
 </div>
 
 <!-- VIEW: CALENDAR -->
@@ -103,6 +106,7 @@
   <div class="queue-header">
     <div class="queue-title" id="cal-title">Активность <span class="month-green">июль</span><span class="year-mini">2026</span></div>
     <div class="cal-nav">
+      <button class="cal-btn" id="btn-today" style="display:none;" onclick="resetMonth()">⊙</button>
       <button class="cal-btn" onclick="changeMonth(-1)">‹</button>
       <button class="cal-btn" onclick="changeMonth(1)">›</button>
     </div>
@@ -112,7 +116,7 @@
 
 <!-- VIEW: PROGRESS -->
 <div id="view-progress" class="content" style="display:none;">
-  <div class="queue-title" style="margin-bottom:16px;">Прогрессия весов</div>
+  <div class="queue-title" style="margin-bottom:16px;">Прогрессия (Volume)</div>
   <div id="progress-list"></div>
 </div>
 
@@ -123,27 +127,27 @@
 </div>
 
 <script>
-const SK = 'becoming_v7';
+const SK = 'becoming_v8';
 const QUEUE_ORDER = ['upper', 'lower', 'cardio', 'rest'];
 const ROMAN = ['I', 'II', 'III', 'IV', 'V'];
 const MONTHS = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 
 const EXERCISES = {
   upper: [
-    {n: 'Отжимания на гантелях в дефиците', sets: 3, type: 'mixed', tip: 'Опускаешься ниже кулаков — чувствуешь растяжение груди внизу.'},
-    {n: 'Тяга гантели одной рукой', sets: 3, type: 'mixed', tip: 'Локоть к бедру, не в сторону. Колено и руку упираешь в диван.'},
-    {n: 'Махи в стороны', sets: 3, type: 'mixed', tip: 'Плечи вниз, тянешь локти в стороны как выливаешь воду.'},
-    {n: 'Обратные махи в наклоне', sets: 3, type: 'mixed', tip: 'Наклон 45°, руки слегка согнуты. Контроль разведения.'}
+    {n: 'Отжимания на гантелях в дефиците', sets: 3, type: 'mixed'},
+    {n: 'Тяга гантели одной рукой', sets: 3, type: 'mixed'},
+    {n: 'Махи в стороны', sets: 3, type: 'mixed'},
+    {n: 'Обратные махи в наклоне', sets: 3, type: 'mixed'}
   ],
   lower: [
-    {n: 'Болгарские сплит-приседы', sets: 3, type: 'mixed', tip: 'Одна нога на диване. Опускайся глубоко, спина ровно.'},
-    {n: 'Румынская тяга', sets: 3, type: 'mixed', tip: 'Спина прямая, гантели тянешь вдоль ног вниз.'},
-    {n: 'Молотки (hammer curls)', sets: 3, type: 'mixed', tip: 'Ладони смотрят друг на друга. Без раскачки корпусом.'},
-    {n: 'Скручивания', sets: 3, type: 'reps_only', tip: 'Только лопатки отрываются, поясница прижата.'}
+    {n: 'Болгарские сплит-приседы', sets: 3, type: 'mixed'},
+    {n: 'Румынская тяга', sets: 3, type: 'mixed'},
+    {n: 'Молотки (hammer curls)', sets: 3, type: 'mixed'},
+    {n: 'Скручивания', sets: 3, type: 'reps_only'}
   ],
   cardio: [
-    {n: 'Берпи', sets: 1, type: 'time', tip: 'Жиросжигающая зона пульса.'},
-    {n: 'Бег / Скакалка', sets: 1, type: 'time', tip: 'Держи стабильный темп 25-30 минут.'}
+    {n: 'Берпи', sets: 1, type: 'time'},
+    {n: 'Бег / Скакалка', sets: 1, type: 'time'}
   ]
 };
 
@@ -153,7 +157,6 @@ let appState = {
   history: []  
 };
 
-// Текущий просматриваемый месяц в календаре
 let calDate = new Date();
 
 try {
@@ -178,6 +181,20 @@ function overrideQueue() {
   appState.queueIdx = (appState.queueIdx + 1) % QUEUE_ORDER.length;
   save();
   renderWorkout();
+}
+
+function toggleSkip(exName, btnEl) {
+  const card = btnEl.closest('.ex-card');
+  const isSkipped = !appState.records[exName].skipped;
+  appState.records[exName].skipped = isSkipped;
+  
+  if (isSkipped) {
+    card.classList.add('skipped');
+    btnEl.innerHTML = 'ВОССТАНОВИТЬ ↺';
+  } else {
+    card.classList.remove('skipped');
+    btnEl.innerHTML = '✕';
+  }
 }
 
 function renderWorkout() {
@@ -213,60 +230,54 @@ function renderWorkout() {
           </div>
         </div>
       </div>`;
-    btn.textContent = 'Подтвердить отдых';
+    btn.textContent = 'ЗАВЕРШИТЬ';
     return;
   }
 
-  btn.textContent = 'Завершить тренировку';
+  btn.textContent = 'ЗАВЕРШИТЬ';
   
   EXERCISES[currentType].forEach((ex) => {
-    const card = document.createElement('div');
-    card.className = 'ex-card';
-    card.innerHTML = `
-      <div class="ex-name" style="color:${colors[currentType]}">${ex.n}</div>
-      <div class="ex-tip">${ex.tip}</div>
-    `;
-    
-    if(!appState.records[ex.n]) appState.records[ex.n] = {};
+    if(!appState.records[ex.n]) appState.records[ex.n] = { skipped: false };
     const rec = appState.records[ex.n];
+    
+    const card = document.createElement('div');
+    card.className = 'ex-card' + (rec.skipped ? ' skipped' : '');
+    card.innerHTML = `
+      <div class="ex-head">
+        <div class="ex-name" style="color:${colors[currentType]}">${ex.n}</div>
+        <div class="skip-btn" onclick="toggleSkip('${ex.n}', this)">${rec.skipped ? 'ВОССТАНОВИТЬ ↺' : '✕'}</div>
+      </div>
+    `;
     
     for(let s=0; s<ex.sets; s++) {
       const setBox = document.createElement('div');
       setBox.className = 'set-container';
       setBox.innerHTML = `<div class="set-title">${ROMAN[s]} подход</div>`;
       
-      // Инициализация дефолтов, если записей нет
       if(rec[`w${s}`] === undefined) rec[`w${s}`] = ex.type === 'reps_only' ? 0 : 5;
       if(rec[`r${s}`] === undefined) rec[`r${s}`] = 10;
       
-      // 1. Линия регулировки веса (СТЕНПЕРЫ с шагом 1кг)
       if(ex.type === 'mixed') {
         const weightRow = document.createElement('div');
         weightRow.className = 'ctrl-row';
-        weightRow.innerHTML = `<div class="ctrl-lbl">Вес снаряда:</div>`;
-        
-        const stepper = document.createElement('div');
-        stepper.className = 'stepper-ctrl';
-        stepper.innerHTML = `
+        weightRow.innerHTML = `<div class="ctrl-lbl">Вес:</div>
+        <div class="stepper-ctrl">
           <button class="st-btn" onclick="updateWeight('${ex.n}', ${s}, -1)">-</button>
           <div><span class="st-val" id="w_val_${ex.n}_${s}">${rec[`w${s}`]}</span> <span class="st-unit">кг</span></div>
           <button class="st-btn" onclick="updateWeight('${ex.n}', ${s}, 1)">+</button>
-        `;
-        weightRow.appendChild(stepper);
+        </div>`;
         setBox.appendChild(weightRow);
       }
       
-      // 2. Линия регулировки повторений (ПОЛЗУНКИ, нативные и послушные)
       const repsRow = document.createElement('div');
       repsRow.className = 'ctrl-row';
-      repsRow.innerHTML = `<div class="ctrl-lbl">${ex.type === 'time' ? 'Время:' : 'Повторения:'}</div>`;
-      
-      const sliderWrap = document.createElement('div');
-      sliderWrap.className = 'slider-wrapper';
+      repsRow.innerHTML = `<div class="ctrl-lbl">${ex.type === 'time' ? 'Время:' : 'Раз:'}</div>`;
       
       const maxRange = ex.type === 'time' ? 60 : 30;
       const unitStr = ex.type === 'time' ? 'мин' : 'раз';
       
+      const sliderWrap = document.createElement('div');
+      sliderWrap.className = 'slider-wrapper';
       sliderWrap.innerHTML = `
         <input type="range" min="1" max="${maxRange}" value="${rec[`r${s}`]}" class="native-slider ${currentType}" 
           oninput="updateSlider('${ex.n}', ${s}, this.value)">
@@ -297,41 +308,52 @@ function finishWorkout() {
   const currentType = QUEUE_ORDER[appState.queueIdx];
   const today = new Date().toISOString().split('T')[0];
   
-  // Делаем глубокий снимок текущих весов для истории прогресса
   const snapshot = JSON.parse(JSON.stringify(appState.records));
+  appState.history.push({ date: today, type: currentType, snapshot: snapshot });
   
-  appState.history.push({
-    date: today,
-    type: currentType,
-    snapshot: snapshot
-  });
+  // Сбрасываем флаг skipped для следующей тренировки
+  Object.keys(appState.records).forEach(key => appState.records[key].skipped = false);
   
   appState.queueIdx = (appState.queueIdx + 1) % QUEUE_ORDER.length;
   save();
   
   const btn = document.getElementById('finish-btn');
-  btn.textContent = 'СОХРАНЕНО ✓';
+  btn.textContent = '✓ СОХРАНЕНО';
   setTimeout(() => {
     switchView('calendar');
     renderWorkout();
   }, 1000);
 }
 
-// Календарь с пагинацией месяцев
+// Календарь
 function changeMonth(dir) {
   calDate.setMonth(calDate.getMonth() + dir);
+  renderCalendar();
+}
+
+function resetMonth() {
+  calDate = new Date();
   renderCalendar();
 }
 
 function renderCalendar() {
   const grid = document.getElementById('cal-grid');
   const title = document.getElementById('cal-title');
+  const btnToday = document.getElementById('btn-today');
   grid.innerHTML = '';
   
+  const realToday = new Date();
   const year = calDate.getFullYear();
   const month = calDate.getMonth();
   
   title.innerHTML = `Активность <span class="month-green">${MONTHS[month].toLowerCase()}</span><span class="year-mini">${year}</span>`;
+  
+  // Показываем кнопку "вернуться на сегодня", если пролистали месяц
+  if (year !== realToday.getFullYear() || month !== realToday.getMonth()) {
+    btnToday.style.display = 'block';
+  } else {
+    btnToday.style.display = 'none';
+  }
   
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   
@@ -348,59 +370,96 @@ function renderCalendar() {
   }
 }
 
-// Отображение прогрессии весов
+// Прогрессия (Графики и Майлстоуны)
+function getIsoWeek(dateStr) {
+  const d = new Date(dateStr);
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
+  const week1 = new Date(d.getFullYear(), 0, 4);
+  return d.getFullYear() + '-' + Math.round(((d.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+}
+
+function formatShortDate(dateStr) {
+  const d = new Date(dateStr);
+  return String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0');
+}
+
 function renderProgress() {
   const container = document.getElementById('progress-list');
   container.innerHTML = '';
   
-  // Собираем все уникальные имена упражнений из истории
   const uniqueExercises = new Set();
   Object.values(EXERCISES).forEach(list => list.forEach(ex => uniqueExercises.add(ex.n)));
   
   let hasData = false;
   
   uniqueExercises.forEach(exName => {
-    const exProgression = [];
+    const weeklyData = [];
+    const seenWeeks = new Set();
     
-    // Фильтруем историю, где выполнялось это упражнение
+    // Фильтруем: только первое выполнение упражнения за календарную неделю, и только если не skipped
     appState.history.forEach(entry => {
-      if(entry.snapshot && entry.snapshot[exName]) {
-        const data = entry.snapshot[exName];
-        // Собираем лог по подходам
-        let setLogs = [];
-        for(let s=0; s<5; s++) {
-          if(data[`r${s}`] !== undefined) {
-            const w = data[`w${s}`] !== undefined ? `${data[`w${s}`]}кг × ` : '';
-            setLogs.push(`${ROMAN[s]}: ${w}${data[`r${s}`]}`);
+      if(entry.snapshot && entry.snapshot[exName] && !entry.snapshot[exName].skipped) {
+        const weekKey = getIsoWeek(entry.date);
+        
+        if(!seenWeeks.has(weekKey)) {
+          seenWeeks.add(weekKey);
+          
+          let vol = 0;
+          for(let s=0; s<5; s++) {
+            const r = entry.snapshot[exName][`r${s}`];
+            const w = entry.snapshot[exName][`w${s}`];
+            if(r !== undefined) {
+              vol += (w > 0) ? (r * w) : r;
+            }
           }
-        }
-        if(setLogs.length > 0) {
-          exProgression.push({ date: entry.date, log: setLogs.join(' | ') });
+          
+          if (vol > 0) {
+            weeklyData.push({ date: formatShortDate(entry.date), vol: vol, type: entry.type });
+          }
         }
       }
     });
     
-    if(exProgression.length > 0) {
+    if(weeklyData.length > 0) {
       hasData = true;
-      const card = document.createElement('div');
-      card.className = 'ex-card';
-      card.innerHTML = `<div class="ex-name" style="color:var(--blue); margin-bottom:10px;">${exName}</div>`;
+      const maxVol = Math.max(...weeklyData.map(d => d.vol));
       
-      exProgression.reverse().forEach(p => {
-        card.innerHTML += `
-          <div class="prog-item">
-            <div class="prog-meta">
-              <span class="prog-date">${p.date}</span>
-              <span class="prog-val">${p.log}</span>
-            </div>
+      const card = document.createElement('div');
+      card.className = 'prog-card';
+      
+      // Определяем цвет бара
+      let barColor = 'var(--blue)';
+      if (EXERCISES.lower.find(e => e.n === exName)) barColor = 'var(--green)';
+      if (EXERCISES.cardio.find(e => e.n === exName)) barColor = 'var(--orange)';
+      
+      let rows = '';
+      weeklyData.forEach((d, i) => {
+        const pct = maxVol > 0 ? Math.round((d.vol / maxVol) * 100) : 0;
+        const prevVol = i > 0 ? weeklyData[i-1].vol : null;
+        let deltaHtml = '';
+        
+        if (prevVol !== null) {
+          const diff = d.vol - prevVol;
+          if (diff > 0) deltaHtml = `<span style="color:var(--green);font-size:9px;">+${diff}</span>`;
+          else if (diff < 0) deltaHtml = `<span style="color:var(--orange);font-size:9px;">${diff}</span>`;
+        }
+        
+        rows += `
+          <div class="prog-row">
+            <div class="prog-date-lbl">${d.date}</div>
+            <div class="prog-bar-wrap"><div class="prog-bar" style="width:${pct}%; background:${barColor}"></div></div>
+            <div class="prog-val">${d.vol} ${deltaHtml}</div>
           </div>`;
       });
+      
+      card.innerHTML = `<div class="ex-name" style="color:${barColor}; margin-bottom:4px;">${exName}</div><div class="prog-rows">${rows}</div>`;
       container.appendChild(card);
     }
   });
   
   if(!hasData) {
-    container.innerHTML = '<div style="text-align:center; color:var(--text3); padding:40px 0; font-family:\'DM Mono\',monospace; font-size:13px;">Данных для анализа силы пока нет. Заверши первую тренировку!</div>';
+    container.innerHTML = '<div style="text-align:center; color:var(--text3); padding:40px 0; font-family:\'DM Mono\',monospace; font-size:13px;">Данных для анализа пока нет.</div>';
   }
 }
 
