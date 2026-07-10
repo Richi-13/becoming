@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0e0e0e">
 <title>Becoming</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2=family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0e0e0e;--bg2:#161616;--bg3:#1e1e1e;
@@ -79,8 +79,6 @@
   .st-val{font-size:18px;min-width:36px;text-align:center;display:inline-block;}
   .st-unit{font-size:12px;color:var(--text3);}
 
-  /* Слайдер выровнен по центру */
-  .slider-wrapper{display:flex;align-items:center;justify-content:center;gap:14px;width:100%;}
   .native-slider{width:140px;-webkit-appearance:none;appearance:none;background:var(--bg3);height:4px;border-radius:2px;outline:none;touch-action:pan-y;}
   .native-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--blue);cursor:pointer;}
   .native-slider.green::-webkit-slider-thumb{background:var(--green);}
@@ -92,7 +90,6 @@
   .month-blue{color:var(--blue);font-weight:500;font-size:16px;text-transform:none;}
   .year-mini{font-size:10px;color:var(--text3);margin-left:6px;}
   .cal-nav{display:flex;gap:6px;}
-  /* Увеличен размер стрелок и отступы */
   .cal-btn{font-size:22px;padding:4px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
   .cal-btn:active{background:var(--border);}
   
@@ -178,7 +175,7 @@
 </div>
 
 <script>
-const SK = 'becoming_v15';
+const SK = 'becoming_v16';
 const QUEUE_ORDER = ['upper', 'lower', 'cardio', 'rest'];
 const ROMAN = ['I', 'II', 'III', 'IV', 'V'];
 const MONTHS = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
@@ -195,7 +192,7 @@ const EXERCISES = {
   lower: [
     {n: 'Болгарские сплит-приседы', sets: 3, type: 'mixed'},
     {n: 'Румынская тяга', sets: 3, type: 'mixed'},
-    {n: 'Молотки (hammer curls)', sets: 3, type: 'mixed'},
+    {n: 'Молотки', sets: 3, type: 'mixed'},
     {n: 'Скручивания', sets: 3, type: 'reps_only'}
   ],
   cardio: [
@@ -359,6 +356,7 @@ function renderWorkout() {
       const maxRange = ex.type === 'time' ? 60 : 30;
       const unitStr = ex.type === 'time' ? 'мин' : 'раз';
       
+      // ВЕРХНИЙ РЯД (Индекс + Степперы веса + Таймер)
       const topRow = document.createElement('div');
       topRow.className = 'ctrl-row';
       topRow.style.justifyContent = 'space-between';
@@ -377,38 +375,40 @@ function renderWorkout() {
             <button class="st-btn" onclick="updateWeight('${ex.n}', ${s}, 1)">+</button>
           </div>
         `;
+      } else {
+        centerHtml = `<div style="flex:1;"></div>`;
       }
       
       topRow.innerHTML = `
-        <div class="set-index" style="width: 54px; text-align: left;">${ROMAN[s]}</div>
+        <div class="set-index" style="width: 64px; text-align: left;">${ROMAN[s]}</div>
         ${centerHtml}
-        <div style="width: 54px; text-align: right;">${timerHtml}</div>
+        <div style="width: 64px; text-align: right;">${timerHtml}</div>
       `;
       setBox.appendChild(topRow);
       
-      const bottomRow = document.createElement('div');
-      bottomRow.className = 'ctrl-row';
-      
+      // НИЖНИЙ РЯД (Сбалансированный ползунок с заглушками по 64px по бокам)
       if(ex.type === 'mixed') {
-        bottomRow.style.justifyContent = 'center';
+        const bottomRow = document.createElement('div');
+        bottomRow.className = 'ctrl-row';
+        bottomRow.style.justifyContent = 'space-between';
         bottomRow.innerHTML = `
-          <div class="slider-wrapper">
-            <input type="range" min="1" max="${maxRange}" value="${rec[`r${s}`]}" class="native-slider ${currentType}" 
-              oninput="updateSlider('${ex.n}', ${s}, this.value)">
-            <div style="min-width:48px; text-align:left;"><span class="st-val" id="r_val_${ex.n}_${s}">${rec[`r${s}`]}</span> <span class="st-unit">${unitStr}</span></div>
+          <div style="width: 64px;"></div>
+          <input type="range" min="1" max="${maxRange}" value="${rec[`r${s}`]}" class="native-slider ${currentType}" 
+            oninput="updateSlider('${ex.n}', ${s}, this.value)">
+          <div style="width: 64px; text-align: right; white-space: nowrap;">
+            <span class="st-val" id="r_val_${ex.n}_${s}">${rec[`r${s}`]}</span> <span class="st-unit">${unitStr}</span>
           </div>
         `;
         setBox.appendChild(bottomRow);
       } else {
-        // Замена структуры для reps_only / cardio ради идеального центрирования слайдера
+        // Если это reps_only или cardio — перестраиваем верхний ряд под идеальный баланс
         topRow.innerHTML = `
-          <div class="set-index" style="width: 54px; text-align: left;">${ROMAN[s]}</div>
-          <div class="slider-wrapper">
-            <input type="range" min="1" max="${maxRange}" value="${rec[`r${s}`]}" class="native-slider ${currentType}" 
-              oninput="updateSlider('${ex.n}', ${s}, this.value)">
-            <div style="min-width:48px; text-align:left;"><span class="st-val" id="r_val_${ex.n}_${s}">${rec[`r${s}`]}</span> <span class="st-unit">${unitStr}</span></div>
+          <div class="set-index" style="width: 64px; text-align: left;">${ROMAN[s]}</div>
+          <input type="range" min="1" max="${maxRange}" value="${rec[`r${s}`]}" class="native-slider ${currentType}" 
+            oninput="updateSlider('${ex.n}', ${s}, this.value)">
+          <div style="width: 64px; text-align: right; white-space: nowrap;">
+            <span class="st-val" id="r_val_${ex.n}_${s}">${rec[`r${s}`]}</span> <span class="st-unit">${unitStr}</span>
           </div>
-          <div style="width: 54px; text-align: right;">${timerHtml}</div>
         `;
       }
       
