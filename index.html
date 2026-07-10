@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0e0e0e">
 <title>Becoming</title>
-<link href="https://fonts.googleapis.com/css2=family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0e0e0e;--bg2:#161616;--bg3:#1e1e1e;
@@ -192,7 +192,7 @@ const EXERCISES = {
   lower: [
     {n: 'Болгарские сплит-приседы', sets: 3, type: 'mixed'},
     {n: 'Румынская тяга', sets: 3, type: 'mixed'},
-    {n: 'Молотки', sets: 3, type: 'mixed'},
+    {n: 'Молотки (hammer curls)', sets: 3, type: 'mixed'},
     {n: 'Скручивания', sets: 3, type: 'reps_only'}
   ],
   cardio: [
@@ -356,15 +356,10 @@ function renderWorkout() {
       const maxRange = ex.type === 'time' ? 60 : 30;
       const unitStr = ex.type === 'time' ? 'мин' : 'раз';
       
-      // ВЕРХНИЙ РЯД (Индекс + Степперы веса + Таймер)
+      // ВЕРХНИЙ РЯД (Индекс + Степперы веса + Пустая заглушка справа)
       const topRow = document.createElement('div');
       topRow.className = 'ctrl-row';
       topRow.style.justifyContent = 'space-between';
-      
-      let timerHtml = '';
-      if (currentType !== 'cardio') {
-         timerHtml = `<button class="timer-btn" onclick="startTimer('${tid}', this, '${currentType}')">${TIMER_ICON}</button>`;
-      }
       
       let centerHtml = '';
       if(ex.type === 'mixed') {
@@ -380,19 +375,27 @@ function renderWorkout() {
       }
       
       topRow.innerHTML = `
-        <div class="set-index" style="width: 64px; text-align: left;">${ROMAN[s]}</div>
+        <div class="set-index" style="width: 64px; text-align: left;">${currentType === 'cardio' ? '' : ROMAN[s]}</div>
         ${centerHtml}
-        <div style="width: 64px; text-align: right;">${timerHtml}</div>
+        <div style="width: 64px;"></div>
       `;
       setBox.appendChild(topRow);
       
-      // НИЖНИЙ РЯД (Сбалансированный ползунок с заглушками по 64px по бокам)
+      // НИЖНИЙ РЯД (Таймер слева + Ползунок по центру + Счетчик справа)
+      const bottomRow = document.createElement('div');
+      bottomRow.className = 'ctrl-row';
+      bottomRow.style.justifyContent = 'space-between';
+      
+      let timerHtml = '';
+      if (currentType !== 'cardio') {
+         timerHtml = `<button class="timer-btn" onclick="startTimer('${tid}', this, '${currentType}')">${TIMER_ICON}</button>`;
+      } else {
+         timerHtml = ``;
+      }
+      
       if(ex.type === 'mixed') {
-        const bottomRow = document.createElement('div');
-        bottomRow.className = 'ctrl-row';
-        bottomRow.style.justifyContent = 'space-between';
         bottomRow.innerHTML = `
-          <div style="width: 64px;"></div>
+          <div style="width: 64px; text-align: left; display: flex; align-items: center;">${timerHtml}</div>
           <input type="range" min="1" max="${maxRange}" value="${rec[`r${s}`]}" class="native-slider ${currentType}" 
             oninput="updateSlider('${ex.n}', ${s}, this.value)">
           <div style="width: 64px; text-align: right; white-space: nowrap;">
@@ -401,9 +404,9 @@ function renderWorkout() {
         `;
         setBox.appendChild(bottomRow);
       } else {
-        // Если это reps_only или cardio — перестраиваем верхний ряд под идеальный баланс
+        // Если это reps_only или cardio — выстраиваем один идеально отцентрованный ряд
         topRow.innerHTML = `
-          <div class="set-index" style="width: 64px; text-align: left;">${ROMAN[s]}</div>
+          <div class="set-index" style="width: 64px; text-align: left;">${currentType === 'cardio' ? '' : ROMAN[s]}</div>
           <input type="range" min="1" max="${maxRange}" value="${rec[`r${s}`]}" class="native-slider ${currentType}" 
             oninput="updateSlider('${ex.n}', ${s}, this.value)">
           <div style="width: 64px; text-align: right; white-space: nowrap;">
