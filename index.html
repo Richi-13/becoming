@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0e0e0e">
 <title>Becoming</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0e0e0e;--bg2:#161616;--bg3:#1e1e1e;
-    --border:#2a2a2a;--text:#f0f0f0;--text2:#888;--text3:#444;
+    --border:#2a2a2a;--text:#f0f0f0;--text2:#999;--text3:#555;
     --blue:#4a9eff;--blue-dim:#0f2a45;
     --green:#4ade80;--green-dim:#0f2a1a;
     --orange:#fb923c;--orange-dim:#2a1508;
@@ -17,72 +17,102 @@
     --radius:10px;--radius-sm:6px;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-  html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overscroll-behavior:none;}
+  html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;overscroll-behavior:none;}
   body{max-width:480px;margin:0 auto;padding-bottom:80px;}
 
   .header{padding:20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);}
-  .logo{font-family:'DM Mono',monospace;font-size:22px;font-weight:300;letter-spacing:0.08em;}
+  .logo{font-size:22px;font-weight:300;letter-spacing:0.08em;}
   .logo span{color:var(--blue);}
 
   .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--bg);border-top:1px solid var(--border);display:flex;z-index:100;}
-  .bnav-item{flex:1;padding:16px 4px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);cursor:pointer;letter-spacing:0.04em;}
+  .bnav-item{flex:1;padding:16px 4px;display:flex;justify-content:center;align-items:center;color:var(--text3);cursor:pointer;transition:color 0.2s;}
   .bnav-item.active{color:var(--blue);}
+  .bnav-item svg{width:22px;height:22px;}
 
   .content{padding:16px 20px;}
 
+  /* QUEUE HEADER & NAV */
   .queue-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
-  .queue-title{font-family:'DM Mono',monospace;font-size:14px;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;}
-  .month-green{color:var(--green);font-weight:500;}
-  .year-mini{font-size:10px;color:var(--text3);margin-left:6px;}
+  .queue-title{font-size:16px;font-weight:500;letter-spacing:0.05em;display:flex;align-items:baseline;}
   
-  .cal-nav{display:flex;gap:6px;}
-  .cal-btn{font-family:'DM Mono',monospace;font-size:11px;padding:6px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;transition:all 0.2s;}
-  .cal-btn:active{background:var(--border);}
+  .queue-nav{display:flex;gap:8px;}
+  .q-btn{width:32px;height:32px;border-radius:var(--radius-sm);border:1px solid transparent;background:var(--bg3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;}
+  .q-btn svg{width:16px;height:16px;}
   
+  .q-btn.upper{border-color:var(--blue);color:var(--blue);}
+  .q-btn.upper.active{background:var(--blue-dim);color:var(--blue);}
+  .q-btn.lower{border-color:var(--green);color:var(--green);}
+  .q-btn.lower.active{background:var(--green-dim);color:var(--green);}
+  .q-btn.cardio{border-color:var(--orange);color:var(--orange);}
+  .q-btn.cardio.active{background:var(--orange-dim);color:var(--orange);}
+  .q-btn.rest{border-color:var(--grey);color:var(--grey);}
+  .q-btn.rest.active{background:var(--grey-dim);color:var(--grey);}
+
+  /* EXERCISE CARDS */
   .ex-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;padding:14px;transition:opacity 0.3s;}
   .ex-card.skipped{opacity:0.4;pointer-events:none;}
   .ex-card.skipped .skip-btn{pointer-events:auto;color:var(--text);}
   
   .ex-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
-  .ex-name{font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;}
-  .skip-btn{font-family:'DM Mono',monospace;font-size:16px;color:var(--text3);padding:4px 8px;cursor:pointer;border:1px solid transparent;border-radius:4px;display:flex;align-items:center;justify-content:center;min-width:32px;}
+  .ex-name{font-size:14px;font-weight:500;line-height:1.4;}
+  .skip-btn{font-size:16px;color:var(--text3);padding:4px 8px;cursor:pointer;border:1px solid transparent;border-radius:4px;display:flex;align-items:center;justify-content:center;min-width:32px;}
   .skip-btn:active{background:var(--bg3);border-color:var(--border);}
   
-  .set-container{background:var(--bg);padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:8px;}
-  .set-title{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);margin-bottom:6px;}
+  /* SETS CONTROLS */
+  .set-container{background:var(--bg);padding:12px 14px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:8px;}
   
-  .ctrl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .ctrl-row{display:flex;align-items:center;margin-bottom:14px;width:100%;}
   .ctrl-row:last-child{margin-bottom:0;}
-  .ctrl-lbl{font-size:12px;color:var(--text2);}
   
-  .stepper-ctrl{display:flex;align-items:center;gap:10px;}
-  .st-btn{width:28px;height:28px;border-radius:var(--radius-sm);background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
-  .st-val{font-family:'DM Mono',monospace;font-size:14px;min-width:28px;text-align:center;}
-  .st-unit{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);}
+  .set-index{font-size:14px;color:var(--text3);font-weight:500;}
+  
+  .timer-btn{font-family:'DM Mono',monospace;font-size:12px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:4px;cursor:pointer;width:54px;height:26px;display:inline-flex;align-items:center;justify-content:center;transition:all 0.2s;}
+  .timer-btn.active.upper{color:var(--blue);border-color:var(--blue);background:var(--blue-dim);}
+  .timer-btn.active.lower{color:var(--green);border-color:var(--green);background:var(--green-dim);}
+  
+  .timer-btn.completed {background:transparent; border-color:transparent;}
+  .timer-btn.completed.upper {color:var(--blue);}
+  .timer-btn.completed.lower {color:var(--green);}
+  
+  .stepper-ctrl{display:flex;align-items:center;justify-content:center;gap:8px;}
+  .st-btn{width:34px;height:34px;border-radius:var(--radius-sm);background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .st-val{font-size:18px;min-width:36px;text-align:center;display:inline-block;}
+  .st-unit{font-size:12px;color:var(--text3);}
 
-  .slider-wrapper{display:flex;align-items:center;gap:10px;flex:1;justify-content:flex-end;}
-  .native-slider{width:120px;-webkit-appearance:none;appearance:none;background:var(--bg3);height:4px;border-radius:2px;outline:none;touch-action:pan-y;}
-  .native-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--blue);cursor:pointer;}
+  /* Слайдер выровнен по центру */
+  .slider-wrapper{display:flex;align-items:center;justify-content:center;gap:14px;width:100%;}
+  .native-slider{width:140px;-webkit-appearance:none;appearance:none;background:var(--bg3);height:4px;border-radius:2px;outline:none;touch-action:pan-y;}
+  .native-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--blue);cursor:pointer;}
   .native-slider.green::-webkit-slider-thumb{background:var(--green);}
   .native-slider.orange::-webkit-slider-thumb{background:var(--orange);}
 
-  .save-btn{width:100%;margin-top:16px;padding:14px;background:var(--blue-dim);border:1px solid var(--blue);border-radius:var(--radius-sm);color:var(--blue);font-family:'DM Mono',monospace;font-size:14px;cursor:pointer;letter-spacing:0.04em;}
+  .save-btn{width:60%;margin:16px auto 0;display:block;padding:14px;background:var(--blue-dim);border:1px solid var(--blue);border-radius:var(--radius-sm);color:var(--blue);font-size:14px;cursor:pointer;letter-spacing:0.04em;}
   
-  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:16px;}
-  .cal-day{aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;border:1px solid var(--border);color:var(--text3);}
+  /* CALENDAR */
+  .month-blue{color:var(--blue);font-weight:500;font-size:16px;text-transform:none;}
+  .year-mini{font-size:10px;color:var(--text3);margin-left:6px;}
+  .cal-nav{display:flex;gap:6px;}
+  /* Увеличен размер стрелок и отступы */
+  .cal-btn{font-size:22px;padding:4px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
+  .cal-btn:active{background:var(--border);}
+  
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:12px;}
+  .cal-day-header{font-size:10px;color:var(--text3);text-align:center;padding-bottom:4px;}
+  .cal-day{aspect-ratio:1;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:11px;border:1px solid var(--border);color:var(--text2);transition:all 0.2s;}
   .cal-day.done-upper{background:var(--blue-dim);border-color:var(--blue);color:var(--blue);}
   .cal-day.done-lower{background:var(--green-dim);border-color:var(--green);color:var(--green);}
   .cal-day.done-cardio{background:var(--orange-dim);border-color:var(--orange);color:var(--orange);}
   .cal-day.done-rest{background:var(--grey-dim);border-color:var(--grey);color:var(--grey);}
+  .cal-day.today-highlight{border:1.5px solid var(--text);color:var(--text);font-weight:500;}
 
   /* PROGRESS BAR STYLES */
   .prog-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px;}
   .prog-rows{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
   .prog-row{display:flex;align-items:center;gap:8px;}
-  .prog-date-lbl{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);min-width:32px;}
+  .prog-date-lbl{font-size:10px;color:var(--text3);min-width:32px;}
   .prog-bar-wrap{flex:1;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;}
   .prog-bar{height:100%;border-radius:2px;transition:width 0.4s;background:var(--blue);}
-  .prog-val{font-family:'DM Mono',monospace;font-size:10px;color:var(--text2);min-width:40px;text-align:right;}
+  .prog-val{font-size:10px;color:var(--text2);min-width:40px;text-align:right;}
 </style>
 </head>
 <body>
@@ -94,9 +124,24 @@
 <!-- VIEW: WORKOUT -->
 <div id="view-workout" class="content">
   <div class="queue-header">
-    <div class="queue-title" id="q-title">Очередь: ВЕРХ</div>
-    <button class="cal-btn" onclick="overrideQueue()">Сменить ↻</button>
+    <div class="queue-title" id="q-title">ВЕРХ</div>
+    
+    <div class="queue-nav">
+      <button class="q-btn upper" id="qbtn-0" onclick="setQueue(0)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+      </button>
+      <button class="q-btn lower" id="qbtn-1" onclick="setQueue(1)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+      </button>
+      <button class="q-btn cardio" id="qbtn-2" onclick="setQueue(2)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"></path></svg>
+      </button>
+      <button class="q-btn rest" id="qbtn-3" onclick="setQueue(3)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+      </button>
+    </div>
   </div>
+  
   <div id="workout-list"></div>
   <button class="save-btn" onclick="finishWorkout()" id="finish-btn">готово ✓</button>
 </div>
@@ -104,9 +149,9 @@
 <!-- VIEW: CALENDAR -->
 <div id="view-calendar" class="content" style="display:none;">
   <div class="queue-header">
-    <div class="queue-title" id="cal-title">Активность <span class="month-green">июль</span><span class="year-mini">2026</span></div>
+    <div class="queue-title" id="cal-title"><span class="month-blue">Июль</span><span class="year-mini">2026</span></div>
     <div class="cal-nav">
-      <button class="cal-btn" id="btn-today" style="display:none;" onclick="resetMonth()">⊙</button>
+      <button class="cal-btn" id="btn-today" style="display:none; font-size:12px; padding: 6px 12px;" onclick="resetMonth()">⊙</button>
       <button class="cal-btn" onclick="changeMonth(-1)">‹</button>
       <button class="cal-btn" onclick="changeMonth(1)">›</button>
     </div>
@@ -116,21 +161,29 @@
 
 <!-- VIEW: PROGRESS -->
 <div id="view-progress" class="content" style="display:none;">
-  <div class="queue-title" style="margin-bottom:16px; text-align:center; text-transform:none; font-size:15px; color:var(--text);">Прогрессия</div>
+  <div class="queue-title" style="margin-bottom:16px; justify-content:center; text-transform:none; font-size:15px; color:var(--text);">Прогрессия</div>
   <div id="progress-list"></div>
 </div>
 
 <div class="bottom-nav">
-  <div class="bnav-item active" id="bnav-workout" onclick="switchView('workout')">тренировка</div>
-  <div class="bnav-item" id="bnav-calendar" onclick="switchView('calendar')">календарь</div>
-  <div class="bnav-item" id="bnav-progress" onclick="switchView('progress')">прогресс</div>
+  <div class="bnav-item active" id="bnav-workout" onclick="switchView('workout')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+  </div>
+  <div class="bnav-item" id="bnav-calendar" onclick="switchView('calendar')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+  </div>
+  <div class="bnav-item" id="bnav-progress" onclick="switchView('progress')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+  </div>
 </div>
 
 <script>
-const SK = 'becoming_v9';
+const SK = 'becoming_v15';
 const QUEUE_ORDER = ['upper', 'lower', 'cardio', 'rest'];
 const ROMAN = ['I', 'II', 'III', 'IV', 'V'];
 const MONTHS = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+const TIMER_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>';
+const CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><polyline points="20 6 9 17 4 12"></polyline></svg>';
 
 const EXERCISES = {
   upper: [
@@ -158,6 +211,7 @@ let appState = {
 };
 
 let calDate = new Date();
+let timers = {}; 
 
 try {
   const s = localStorage.getItem(SK);
@@ -177,8 +231,8 @@ function switchView(v) {
   if(v === 'progress') renderProgress();
 }
 
-function overrideQueue() {
-  appState.queueIdx = (appState.queueIdx + 1) % QUEUE_ORDER.length;
+function setQueue(idx) {
+  appState.queueIdx = idx;
   save();
   renderWorkout();
 }
@@ -197,6 +251,40 @@ function toggleSkip(exName, btnEl) {
   }
 }
 
+function startTimer(id, btn, currentType) {
+  if (btn.classList.contains('completed')) {
+    btn.className = 'timer-btn';
+    btn.innerHTML = TIMER_ICON;
+    return;
+  }
+
+  if (timers[id]) {
+    clearInterval(timers[id]);
+    delete timers[id];
+    btn.innerHTML = TIMER_ICON;
+    btn.classList.remove('active', currentType);
+    return;
+  }
+  
+  let t = 120;
+  btn.classList.add('active', currentType);
+  btn.textContent = '2:00';
+  
+  timers[id] = setInterval(() => {
+    t--;
+    const m = Math.floor(t / 60);
+    const s = String(t % 60).padStart(2, '0');
+    btn.textContent = `${m}:${s}`;
+    
+    if (t <= 0) {
+      clearInterval(timers[id]);
+      delete timers[id];
+      btn.innerHTML = CHECK_ICON;
+      btn.className = 'timer-btn completed ' + currentType;
+    }
+  }, 1000);
+}
+
 function renderWorkout() {
   const currentType = QUEUE_ORDER[appState.queueIdx];
   const list = document.getElementById('workout-list');
@@ -206,27 +294,37 @@ function renderWorkout() {
   const colors = {upper: 'var(--blue)', lower: 'var(--green)', cardio: 'var(--orange)', rest: 'var(--grey)'};
   const names = {upper: 'ВЕРХ', lower: 'НИЗ', cardio: 'КАРДИО', rest: 'ОТДЫХ'};
   
-  title.textContent = `Очередь: ${names[currentType]}`;
+  title.textContent = names[currentType];
   title.style.color = colors[currentType];
+  
+  for (let i = 0; i < 4; i++) {
+    const qbtn = document.getElementById(`qbtn-${i}`);
+    if (i === appState.queueIdx) qbtn.classList.add('active');
+    else qbtn.classList.remove('active');
+  }
+  
   btn.style.color = colors[currentType];
   btn.style.borderColor = colors[currentType];
   btn.style.backgroundColor = currentType === 'rest' ? 'var(--grey-dim)' : `var(--${currentType}-dim)`;
   
   list.innerHTML = '';
   
+  Object.keys(timers).forEach(k => clearInterval(timers[k]));
+  timers = {};
+  
   if (currentType === 'rest') {
     list.innerHTML = `
       <div class="ex-card" style="text-align:center; padding: 24px 14px;">
-        <div style="font-family:'DM Mono',monospace;font-size:16px;color:var(--grey);margin-bottom:10px;letter-spacing:0.05em;">ДЕНЬ СТРОИТЕЛЬСТВА</div>
+        <div style="font-size:16px;color:var(--grey);margin-bottom:10px;letter-spacing:0.05em;">ДЕНЬ СТРОИТЕЛЬСТВА</div>
         <div style="font-size:13px;color:var(--text2);margin-bottom:24px;line-height:1.6;">Мышцы растут не во время тренировки,<br>а прямо сейчас. Дай им ресурс.</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left;">
           <div style="background:var(--bg3);padding:12px;border-radius:var(--radius-sm);border:1px solid var(--border);">
-            <div style="font-size:11px;color:var(--text3);margin-bottom:4px;font-family:'DM Mono',monospace;">БЕЛОК</div>
-            <div style="font-family:'DM Mono',monospace;font-size:15px;color:var(--text);">150+ г</div>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">БЕЛОК</div>
+            <div style="font-size:15px;color:var(--text);">150+ г</div>
           </div>
           <div style="background:var(--bg3);padding:12px;border-radius:var(--radius-sm);border:1px solid var(--border);">
-            <div style="font-size:11px;color:var(--text3);margin-bottom:4px;font-family:'DM Mono',monospace;">СОН</div>
-            <div style="font-family:'DM Mono',monospace;font-size:15px;color:var(--text);">7-9 ч</div>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">СОН</div>
+            <div style="font-size:15px;color:var(--text);">7-9 ч</div>
           </div>
         </div>
       </div>`;
@@ -252,39 +350,67 @@ function renderWorkout() {
     for(let s=0; s<ex.sets; s++) {
       const setBox = document.createElement('div');
       setBox.className = 'set-container';
-      setBox.innerHTML = `<div class="set-title">${ROMAN[s]} подход</div>`;
+      
+      const tid = `timer_${ex.n.replace(/\s+/g, '')}_${s}`;
       
       if(rec[`w${s}`] === undefined) rec[`w${s}`] = ex.type === 'reps_only' ? 0 : 5;
       if(rec[`r${s}`] === undefined) rec[`r${s}`] = 10;
       
-      if(ex.type === 'mixed') {
-        const weightRow = document.createElement('div');
-        weightRow.className = 'ctrl-row';
-        weightRow.innerHTML = `<div class="ctrl-lbl">Вес:</div>
-        <div class="stepper-ctrl">
-          <button class="st-btn" onclick="updateWeight('${ex.n}', ${s}, -1)">-</button>
-          <div><span class="st-val" id="w_val_${ex.n}_${s}">${rec[`w${s}`]}</span> <span class="st-unit">кг</span></div>
-          <button class="st-btn" onclick="updateWeight('${ex.n}', ${s}, 1)">+</button>
-        </div>`;
-        setBox.appendChild(weightRow);
-      }
-      
-      const repsRow = document.createElement('div');
-      repsRow.className = 'ctrl-row';
-      repsRow.innerHTML = `<div class="ctrl-lbl">${ex.type === 'time' ? 'Время:' : 'Раз:'}</div>`;
-      
       const maxRange = ex.type === 'time' ? 60 : 30;
       const unitStr = ex.type === 'time' ? 'мин' : 'раз';
       
-      const sliderWrap = document.createElement('div');
-      sliderWrap.className = 'slider-wrapper';
-      sliderWrap.innerHTML = `
-        <input type="range" min="1" max="${maxRange}" value="${rec[`r${s}`]}" class="native-slider ${currentType}" 
-          oninput="updateSlider('${ex.n}', ${s}, this.value)">
-        <div><span class="st-val" id="r_val_${ex.n}_${s}">${rec[`r${s}`]}</span> <span class="st-unit">${unitStr}</span></div>
+      const topRow = document.createElement('div');
+      topRow.className = 'ctrl-row';
+      topRow.style.justifyContent = 'space-between';
+      
+      let timerHtml = '';
+      if (currentType !== 'cardio') {
+         timerHtml = `<button class="timer-btn" onclick="startTimer('${tid}', this, '${currentType}')">${TIMER_ICON}</button>`;
+      }
+      
+      let centerHtml = '';
+      if(ex.type === 'mixed') {
+        centerHtml = `
+          <div class="stepper-ctrl">
+            <button class="st-btn" onclick="updateWeight('${ex.n}', ${s}, -1)">-</button>
+            <div><span class="st-val" id="w_val_${ex.n}_${s}">${rec[`w${s}`]}</span> <span class="st-unit">кг</span></div>
+            <button class="st-btn" onclick="updateWeight('${ex.n}', ${s}, 1)">+</button>
+          </div>
+        `;
+      }
+      
+      topRow.innerHTML = `
+        <div class="set-index" style="width: 54px; text-align: left;">${ROMAN[s]}</div>
+        ${centerHtml}
+        <div style="width: 54px; text-align: right;">${timerHtml}</div>
       `;
-      repsRow.appendChild(sliderWrap);
-      setBox.appendChild(repsRow);
+      setBox.appendChild(topRow);
+      
+      const bottomRow = document.createElement('div');
+      bottomRow.className = 'ctrl-row';
+      
+      if(ex.type === 'mixed') {
+        bottomRow.style.justifyContent = 'center';
+        bottomRow.innerHTML = `
+          <div class="slider-wrapper">
+            <input type="range" min="1" max="${maxRange}" value="${rec[`r${s}`]}" class="native-slider ${currentType}" 
+              oninput="updateSlider('${ex.n}', ${s}, this.value)">
+            <div style="min-width:48px; text-align:left;"><span class="st-val" id="r_val_${ex.n}_${s}">${rec[`r${s}`]}</span> <span class="st-unit">${unitStr}</span></div>
+          </div>
+        `;
+        setBox.appendChild(bottomRow);
+      } else {
+        // Замена структуры для reps_only / cardio ради идеального центрирования слайдера
+        topRow.innerHTML = `
+          <div class="set-index" style="width: 54px; text-align: left;">${ROMAN[s]}</div>
+          <div class="slider-wrapper">
+            <input type="range" min="1" max="${maxRange}" value="${rec[`r${s}`]}" class="native-slider ${currentType}" 
+              oninput="updateSlider('${ex.n}', ${s}, this.value)">
+            <div style="min-width:48px; text-align:left;"><span class="st-val" id="r_val_${ex.n}_${s}">${rec[`r${s}`]}</span> <span class="st-unit">${unitStr}</span></div>
+          </div>
+          <div style="width: 54px; text-align: right;">${timerHtml}</div>
+        `;
+      }
       
       card.appendChild(setBox);
     }
@@ -345,7 +471,7 @@ function renderCalendar() {
   const year = calDate.getFullYear();
   const month = calDate.getMonth();
   
-  title.innerHTML = `Активность <span class="month-green">${MONTHS[month].toLowerCase()}</span><span class="year-mini">${year}</span>`;
+  title.innerHTML = `<span class="month-blue">${MONTHS[month]}</span><span class="year-mini">${year}</span>`;
   
   if (year !== realToday.getFullYear() || month !== realToday.getMonth()) {
     btnToday.style.display = 'block';
@@ -353,22 +479,40 @@ function renderCalendar() {
     btnToday.style.display = 'none';
   }
   
+  const daysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+  daysOfWeek.forEach(d => {
+    const div = document.createElement('div');
+    div.className = 'cal-day-header';
+    div.textContent = d;
+    grid.appendChild(div);
+  });
+  
+  let firstDay = new Date(year, month, 1).getDay();
+  firstDay = firstDay === 0 ? 6 : firstDay - 1; 
+  
+  for(let i=0; i<firstDay; i++) {
+    const emptyDiv = document.createElement('div');
+    grid.appendChild(emptyDiv);
+  }
+  
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   
   for(let i=1; i<=daysInMonth; i++) {
     const dayStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
     const hit = appState.history.find(h => h.date === dayStr);
+    const isToday = (year === realToday.getFullYear() && month === realToday.getMonth() && i === realToday.getDate());
     
     const div = document.createElement('div');
     div.className = 'cal-day';
     if(hit) div.classList.add(`done-${hit.type}`);
+    if(isToday) div.classList.add('today-highlight');
     
     div.textContent = i;
     grid.appendChild(div);
   }
 }
 
-// Прогрессия (Только силовые)
+// Прогрессия
 function getIsoWeek(dateStr) {
   const d = new Date(dateStr);
   d.setHours(0, 0, 0, 0);
@@ -387,7 +531,6 @@ function renderProgress() {
   container.innerHTML = '';
   
   const uniqueExercises = new Set();
-  // Добавляем только силовые упражнения, исключая кардио
   EXERCISES.upper.forEach(ex => uniqueExercises.add(ex.n));
   EXERCISES.lower.forEach(ex => uniqueExercises.add(ex.n));
   
@@ -456,7 +599,7 @@ function renderProgress() {
   });
   
   if(!hasData) {
-    container.innerHTML = '<div style="text-align:center; color:var(--text3); padding:40px 0; font-family:\'DM Mono\',monospace; font-size:13px;">Данных для анализа пока нет.</div>';
+    container.innerHTML = '<div style="text-align:center; color:var(--text3); padding:40px 0; font-size:13px;">Данных для анализа пока нет.</div>';
   }
 }
 
