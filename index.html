@@ -436,21 +436,52 @@ function updateSlider(exName, setIdx, val) {
 function finishWorkout() {
   const currentType = QUEUE_ORDER[appState.queueIdx];
   const today = new Date().toISOString().split('T')[0];
-  
   const snapshot = JSON.parse(JSON.stringify(appState.records));
-  appState.history.push({ date: today, type: currentType, snapshot: snapshot });
   
-  Object.keys(appState.records).forEach(key => appState.records[key].skipped = false);
-  
-  appState.queueIdx = (appState.queueIdx + 1) % QUEUE_ORDER.length;
-  save();
+  // Собираем посылку для Python-сервера
+  const payload = {
+    date: today,
+    type: currentType,
+    snapshot: snapshot
+  };
   
   const btn = document.getElementById('finish-btn');
-  btn.innerHTML = 'сохранено';
-  setTimeout(() => {
-    switchView('calendar');
-    renderWorkout();
-  }, 1000);
+  btn.innerHTML = 'отправка...';
+  
+  // Отправляем данные на сервер по безопасной дороге Tailscale
+  fetch('http://100.119.46.14:8000/api/workout', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(response => {
+    if (!response.ok) throw new Error('Ошибка сервера');
+    return response.json();
+  })
+  .then(data => {
+    // Если бэкенд ответил успехом, сохраняем локально и двигаем очередь
+    appState.history.push({ date: today, type: currentType, snapshot: snapshot });
+    Object.keys(appState.records).forEach(key => appState.records[key].skipped = false);
+    
+    appState.queueIdx = (appState.queueIdx + 1) % QUEUE_ORDER.length;
+    save();
+    
+    btn.innerHTML = 'сохранено ✓';
+    setTimeout(() => {
+      switchView('calendar');
+      renderWorkout();
+    }, 1000);
+  })
+  .catch(err => {
+    console.error(err);
+    btn.innerHTML = 'ошибка ✕';
+    alert('Сервер недоступен. Проверь, запущен ли Python-скрипт и включен ли Tailscale!');
+    setTimeout(() => { 
+      btn.innerHTML = 'готово ✓'; 
+    }, 2000);
+  });
 }
 
 // Календарь
